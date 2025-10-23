@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,7 +14,7 @@ type Step = "customer" | "confirmation" | "payment" | "receipt"
 
 export default function PaymentForm() {
   const [currentStep, setCurrentStep] = useState<Step>("customer")
-  const [generatedCode, setGeneratedCode] = useState(() => Math.floor(100000 + Math.random() * 900000).toString())
+  const [generatedCode, setGeneratedCode] = useState("")
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -30,6 +29,10 @@ export default function PaymentForm() {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    setGeneratedCode(Math.floor(100000 + Math.random() * 900000).toString())
+  }, [])
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
