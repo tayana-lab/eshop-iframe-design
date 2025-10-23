@@ -100,6 +100,24 @@ export default function PaymentForm() {
     }
   }
 
+  const handleNewTransaction = () => {
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      contactNumber: "",
+      mobileNumber: "",
+      rechargeType: "",
+      amount: "",
+      verificationCode: "",
+      confirmed: false,
+      paymentMethod: "visa",
+    })
+    setErrors({})
+    setGeneratedCode(Math.floor(100000 + Math.random() * 900000).toString())
+    setCurrentStep("customer")
+  }
+
   const steps = [
     { id: "customer" as Step, label: "Customer Details", icon: User },
     { id: "confirmation" as Step, label: "Confirmation", icon: FileCheck },
@@ -888,7 +906,7 @@ export default function PaymentForm() {
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                   <Button
-                    onClick={() => setCurrentStep("customer")}
+                    onClick={handleNewTransaction}
                     className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
                     style={{
                       backgroundColor: "#006bb6",
