@@ -134,9 +134,9 @@ export default function PaymentForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 px-4 py-4 md:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center justify-start gap-4 text-center">
+        <div className="mb-4 flex items-center justify-start gap-4 text-center">
           <div
             className="flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
             style={{ backgroundColor: "#006bb6" }}
@@ -163,7 +163,7 @@ export default function PaymentForm() {
         </div>
 
         <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2 text-sm md:text-base mb-8">
+          <div className="flex flex-wrap items-center gap-2 text-sm md:text-base mb-4">
             {steps.map((step, index) => {
               const stepIndex = steps.findIndex((s) => s.id === currentStep)
               const isActive = index === stepIndex
@@ -196,11 +196,11 @@ export default function PaymentForm() {
         </div>
 
         <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
-          <div className="p-6 md:p-10 lg:p-12">
+          <div className="p-4 md:p-6 lg:p-8">
             {currentStep === "customer" && (
-              <div className="space-y-10">
+              <div className="space-y-6">
                 <div>
-                  <div className="mb-6 flex items-center gap-3">
+                  <div className="mb-4 flex items-center gap-3">
                     <div
                       className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
                       style={{ backgroundColor: "#006bb6" }}
@@ -210,8 +210,8 @@ export default function PaymentForm() {
                     <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="grid gap-6 md:grid-cols-3">
+                  <div className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-3">
                       <div className="space-y-2">
                         <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                           First Name <span className="text-red-500">*</span>
@@ -313,7 +313,7 @@ export default function PaymentForm() {
                       </div>
                     </div>
 
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="contactNumber" className="text-sm font-medium text-gray-700">
                           Contact Number <span className="text-red-500">*</span>
@@ -387,9 +387,9 @@ export default function PaymentForm() {
                   </div>
                 </div>
 
-                <div className="grid gap-8 lg:grid-cols-2">
+                <div className="grid gap-6 lg:grid-cols-2">
                   <div>
-                    <div className="mb-6 flex items-center gap-3">
+                    <div className="mb-4 flex items-center gap-3">
                       <div
                         className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
                         style={{ backgroundColor: "#006bb6" }}
@@ -399,7 +399,7 @@ export default function PaymentForm() {
                       <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="rechargeType" className="text-sm font-medium text-gray-700">
                           Recharge Type <span className="text-red-500">*</span>
@@ -543,7 +543,7 @@ export default function PaymentForm() {
                   </div>
 
                   <div>
-                    <div className="mb-6 flex items-center gap-3">
+                    <div className="mb-4 flex items-center gap-3">
                       <div
                         className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
                         style={{ backgroundColor: "#006bb6" }}
@@ -553,7 +553,7 @@ export default function PaymentForm() {
                       <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div className="space-y-2">
                         <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
                         <div
@@ -621,7 +621,7 @@ export default function PaymentForm() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-4 border-t border-gray-100 pt-8 sm:flex-row sm:justify-end">
+                <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                   <Button
                     type="button"
                     variant="outline"
@@ -659,7 +659,7 @@ export default function PaymentForm() {
             )}
 
             {currentStep === "confirmation" && (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div className="rounded-xl border border-gray-200 p-6">
                   <p className="text-sm font-medium text-gray-500">eShop Customer:</p>
                   <p className="mt-1 text-xl font-bold text-gray-900">
@@ -734,7 +734,7 @@ export default function PaymentForm() {
                   </Label>
                 </div>
 
-                <div className="flex flex-col gap-4 border-t border-gray-100 pt-8 sm:flex-row sm:justify-end">
+                <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                   <Button
                     onClick={handleBack}
                     variant="outline"
@@ -758,7 +758,7 @@ export default function PaymentForm() {
             )}
 
             {currentStep === "payment" && (
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div>
                   <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
                     <p className="font-semibold text-gray-900">Transaction Details:</p>
@@ -838,7 +838,7 @@ export default function PaymentForm() {
                   </ol>
                 </div>
 
-                <div className="flex flex-col gap-4 border-t border-gray-100 pt-8 sm:flex-row sm:justify-end">
+                <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                   <Button
                     onClick={handleBack}
                     variant="outline"
@@ -861,7 +861,7 @@ export default function PaymentForm() {
             )}
 
             {currentStep === "receipt" && (
-              <div className="space-y-8 text-center">
+              <div className="space-y-6 text-center">
                 <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
                   <Check className="h-12 w-12 text-green-600" strokeWidth={3} />
                 </div>
