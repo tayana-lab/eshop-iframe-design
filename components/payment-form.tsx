@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Check, User, FileCheck, CreditCard, Receipt, RefreshCw, ChevronRight } from "lucide-react"
+import { Check, User, FileCheck, CreditCard, Receipt, RefreshCw } from "lucide-react"
 
 type Step = "customer" | "confirmation" | "payment" | "receipt"
 
@@ -162,8 +162,8 @@ export default function PaymentForm() {
           </div>
         </div>
 
-        <div className="max-w-3xl">
-          <div className="flex flex-wrap items-center gap-2 text-sm md:text-base mb-4">
+        <div className="max-w-3xl mb-4 mt-4">
+          <div className="flex items-center justify-between">
             {steps.map((step, index) => {
               const stepIndex = steps.findIndex((s) => s.id === currentStep)
               const isActive = index === stepIndex
@@ -171,23 +171,50 @@ export default function PaymentForm() {
               const isLast = index === steps.length - 1
 
               return (
-                <div key={step.id} className="flex items-center gap-2">
-                  <span
-                    className="font-medium transition-colors duration-300"
-                    style={{
-                      color: isActive ? "#006bb6" : isCompleted ? "#374151" : "#9ca3af",
-                      fontWeight: isActive ? "600" : "500",
-                    }}
-                  >
-                    {step.label}
-                  </span>
-                  {!isLast && (
-                    <ChevronRight
-                      className="h-4 w-4"
+                <div key={step.id} className="flex flex-1 items-center">
+                  <div className="flex flex-col items-center">
+                    {/* Step circle */}
+                    <div
+                      className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-4 transition-all duration-300"
                       style={{
-                        color: isCompleted ? "#374151" : "#d1d5db",
+                        backgroundColor: isActive || isCompleted ? "#006bb6" : "#ffffff",
+                        borderColor: isActive || isCompleted ? "#006bb6" : "#d1d5db",
                       }}
-                    />
+                    >
+                      {isCompleted ? (
+                        <Check className="h-6 w-6 text-white" strokeWidth={3} />
+                      ) : (
+                        <span
+                          className="text-sm font-bold"
+                          style={{
+                            color: isActive ? "#ffffff" : "#9ca3af",
+                          }}
+                        >
+                          {index + 1}
+                        </span>
+                      )}
+                    </div>
+                    {/* Step label */}
+                    <span
+                      className="mt-2 text-xs font-medium md:text-sm"
+                      style={{
+                        color: isActive || isCompleted ? "#006bb6" : "#9ca3af",
+                      }}
+                    >
+                      {step.label}
+                    </span>
+                  </div>
+
+                  {/* Connecting line - positioned to align with circle center */}
+                  {!isLast && (
+                    <div className="relative flex-1 px-4" style={{ marginTop: "-32px" }}>
+                      <div
+                        className="h-1 w-full rounded-full transition-all duration-300"
+                        style={{
+                          backgroundColor: isCompleted ? "#006bb6" : "#e5e7eb",
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               )
