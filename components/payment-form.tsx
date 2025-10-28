@@ -12,7 +12,13 @@ import { Check, User, FileCheck, CreditCard, Receipt, RefreshCw } from "lucide-r
 
 type Step = "customer" | "confirmation" | "payment" | "receipt"
 
-export default function PaymentForm() {
+type FormType = "airtime" | "booster" | "broadband" | "billpay"
+
+interface PaymentFormProps {
+  formType?: FormType
+}
+
+export default function PaymentForm({ formType = "airtime" }: PaymentFormProps) {
   const [currentStep, setCurrentStep] = useState<Step>("customer")
   const [generatedCode, setGeneratedCode] = useState("")
   const [formData, setFormData] = useState({
@@ -21,6 +27,10 @@ export default function PaymentForm() {
     email: "",
     contactNumber: "",
     mobileNumber: "",
+    username: "",
+    accountNumber: "",
+    accountName: "",
+    customerType: "",
     rechargeType: "",
     amount: "",
     verificationCode: "",
@@ -29,6 +39,29 @@ export default function PaymentForm() {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const getMockAccountDetails = (accountNumber: string) => {
+    // Mock data - in real app this would come from backend API
+    const mockAccounts: Record<string, { name: string; type: string }> = {
+      "12345": { name: "John Smith", type: "Individual" },
+      "67890": { name: "ABC Corporation", type: "Corporate" },
+      "11111": { name: "Jane Doe", type: "Individual" },
+      "22222": { name: "XYZ Limited", type: "Corporate" },
+    }
+
+    // Return mock data if account exists, otherwise generate random
+    if (mockAccounts[accountNumber]) {
+      return mockAccounts[accountNumber]
+    }
+
+    // Generate random mock data for any other account number
+    const names = ["Ahmed Al-Rashid", "Sarah Johnson", "Mohamed Hassan", "Tech Solutions Ltd", "Global Services Inc"]
+    const types = ["Individual", "Corporate"]
+    return {
+      name: names[Math.floor(Math.random() * names.length)],
+      type: types[Math.floor(Math.random() * types.length)],
+    }
+  }
 
   useEffect(() => {
     setGeneratedCode(Math.floor(100000 + Math.random() * 900000).toString())
@@ -41,27 +74,43 @@ export default function PaymentForm() {
       newErrors.firstName = "First name is required"
     }
     if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required"
+      newErrors.lastName = "Surname is required"
     }
     if (!formData.email.trim()) {
       newErrors.email = "Email is required"
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address"
     }
-    if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = "Contact number is required"
-    } else if (formData.contactNumber.length !== 7) {
+    // Contact number validation removed - field is now optional
+    if (formData.contactNumber && formData.contactNumber.length !== 7) {
       newErrors.contactNumber = "Contact number must be 7 digits"
     }
-    if (!formData.mobileNumber.trim()) {
-      newErrors.mobileNumber = "Mobile number is required"
-    } else if (formData.mobileNumber.length !== 7) {
-      newErrors.mobileNumber = "Mobile number must be 7 digits"
+
+    if (formType === "billpay") {
+      if (!formData.accountNumber.trim()) {
+        newErrors.accountNumber = "Account number is required"
+      }
+    } else if (formType === "broadband") {
+      if (!formData.username.trim()) {
+        newErrors.username = "Username is required"
+      }
+    } else {
+      if (!formData.mobileNumber.trim()) {
+        newErrors.mobileNumber = "Mobile number is required"
+      } else if (formData.mobileNumber.length !== 7) {
+        newErrors.mobileNumber = "Mobile number must be 7 digits"
+      }
     }
-    if (!formData.rechargeType) {
-      newErrors.rechargeType = "Please select a recharge type"
+
+    if (formType !== "billpay" && !formData.rechargeType) {
+      newErrors.rechargeType =
+        formType === "airtime"
+          ? "Please select a recharge type"
+          : formType === "booster"
+            ? "Please select a booster"
+            : "Please select a giga booster"
     }
-    if (!formData.amount) {
+    if (formType === "airtime" && !formData.amount) {
       newErrors.amount = "Please select an amount"
     }
     if (!formData.verificationCode.trim()) {
@@ -74,8 +123,23 @@ export default function PaymentForm() {
     return Object.keys(newErrors).length === 0
   }
 
+  const validateConfirmation = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (formType === "billpay" && !formData.amount.trim()) {
+      newErrors.amount = "Amount to pay is required"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleNext = () => {
     if (currentStep === "customer" && !validateForm()) {
+      return
+    }
+
+    if (currentStep === "confirmation" && formType === "billpay" && !validateConfirmation()) {
       return
     }
 
@@ -110,6 +174,10 @@ export default function PaymentForm() {
       email: "",
       contactNumber: "",
       mobileNumber: "",
+      username: "",
+      accountNumber: "",
+      accountName: "",
+      customerType: "",
       rechargeType: "",
       amount: "",
       verificationCode: "",
@@ -274,7 +342,7 @@ export default function PaymentForm() {
 
                       <div className="space-y-2">
                         <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
-                          Last Name <span className="text-red-500">*</span>
+                          Surname <span className="text-red-500">*</span>
                         </Label>
                         <Input
                           id="lastName"
@@ -292,7 +360,7 @@ export default function PaymentForm() {
                               borderColor: errors.lastName ? "#ef4444" : "",
                             } as React.CSSProperties
                           }
-                          placeholder="Enter your last name"
+                          placeholder="Enter your surname"
                           onFocus={(e) => {
                             e.target.style.borderColor = errors.lastName ? "#ef4444" : "#006bb6"
                             e.target.style.borderWidth = "2px"
@@ -343,7 +411,7 @@ export default function PaymentForm() {
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="contactNumber" className="text-sm font-medium text-gray-700">
-                          Contact Number <span className="text-red-500">*</span>
+                          Contact Number
                         </Label>
                         <Input
                           id="contactNumber"
@@ -377,44 +445,122 @@ export default function PaymentForm() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="mobileNumber" className="text-sm font-medium text-gray-700">
-                          Mobile Number <span className="text-red-500">*</span>
-                        </Label>
-                        <Input
-                          id="mobileNumber"
-                          value={formData.mobileNumber}
-                          onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, "")
-                            setFormData({ ...formData, mobileNumber: value })
-                            if (errors.mobileNumber) {
-                              setErrors({ ...errors, mobileNumber: "" })
-                            }
-                          }}
-                          className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
-                          style={
-                            {
-                              "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                              borderColor: errors.mobileNumber ? "#ef4444" : "",
-                            } as React.CSSProperties
+                        <Label
+                          htmlFor={
+                            formType === "billpay"
+                              ? "accountNumber"
+                              : formType === "broadband"
+                                ? "username"
+                                : "mobileNumber"
                           }
-                          placeholder="Enter your mobile number"
-                          maxLength={7}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : "#006bb6"
-                            e.target.style.borderWidth = "2px"
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : ""
-                            e.target.style.borderWidth = "2px"
-                          }}
-                        />
-                        {errors.mobileNumber && <p className="text-sm text-red-500">{errors.mobileNumber}</p>}
+                          className="text-sm font-medium text-gray-700"
+                        >
+                          {formType === "billpay"
+                            ? "Account Number"
+                            : formType === "broadband"
+                              ? "Username"
+                              : "Mobile Number"}{" "}
+                          <span className="text-red-500">*</span>
+                        </Label>
+                        {formType === "billpay" ? (
+                          <Input
+                            id="accountNumber"
+                            value={formData.accountNumber}
+                            onChange={(e) => {
+                              setFormData({ ...formData, accountNumber: e.target.value })
+                              if (errors.accountNumber) {
+                                setErrors({ ...errors, accountNumber: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.accountNumber ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter your account number"
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.accountNumber ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.accountNumber ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                        ) : formType === "broadband" ? (
+                          <Input
+                            id="username"
+                            value={formData.username}
+                            onChange={(e) => {
+                              setFormData({ ...formData, username: e.target.value })
+                              if (errors.username) {
+                                setErrors({ ...errors, username: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.username ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter your username"
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.username ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.username ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                        ) : (
+                          <Input
+                            id="mobileNumber"
+                            value={formData.mobileNumber}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, "")
+                              setFormData({ ...formData, mobileNumber: value })
+                              if (errors.mobileNumber) {
+                                setErrors({ ...errors, mobileNumber: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.mobileNumber ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter your mobile number"
+                            maxLength={7}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                        )}
+                        {formType === "billpay" && errors.accountNumber && (
+                          <p className="text-sm text-red-500">{errors.accountNumber}</p>
+                        )}
+                        {formType === "broadband" && errors.username && (
+                          <p className="text-sm text-red-500">{errors.username}</p>
+                        )}
+                        {formType !== "broadband" && formType !== "billpay" && errors.mobileNumber && (
+                          <p className="text-sm text-red-500">{errors.mobileNumber}</p>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid gap-6 lg:grid-cols-2">
+                {formType === "billpay" && (
                   <div>
                     <div className="mb-4 flex items-center gap-3">
                       <div
@@ -422,160 +568,6 @@ export default function PaymentForm() {
                         style={{ backgroundColor: "#006bb6" }}
                       >
                         2
-                      </div>
-                      <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="rechargeType" className="text-sm font-medium text-gray-700">
-                          Recharge Type <span className="text-red-500">*</span>
-                        </Label>
-                        <Select
-                          value={formData.rechargeType}
-                          onValueChange={(value) => {
-                            setFormData({ ...formData, rechargeType: value })
-                            if (errors.rechargeType) {
-                              setErrors({ ...errors, rechargeType: "" })
-                            }
-                          }}
-                        >
-                          <SelectTrigger
-                            className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
-                            style={
-                              {
-                                height: "56px",
-                                paddingLeft: "1rem",
-                                paddingRight: "1rem",
-                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                                borderColor: errors.rechargeType ? "#ef4444" : "#e5e7eb",
-                              } as React.CSSProperties
-                            }
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#006bb6"
-                              e.currentTarget.style.borderWidth = "2px"
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#e5e7eb"
-                              e.currentTarget.style.borderWidth = "2px"
-                            }}
-                          >
-                            <SelectValue placeholder="Select recharge type..." />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-xl">
-                            <SelectItem value="credit" className="text-base">
-                              Credit
-                            </SelectItem>
-                            <SelectItem value="local-talktime" className="text-base">
-                              Local Talktime
-                            </SelectItem>
-                            <SelectItem value="jumbo-booster" className="text-base">
-                              Jumbo Booster
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        {errors.rechargeType && <p className="text-sm text-red-500">{errors.rechargeType}</p>}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
-                          Amount (SCR) <span className="text-red-500">*</span>
-                        </Label>
-                        <Select
-                          value={formData.amount}
-                          onValueChange={(value) => {
-                            setFormData({ ...formData, amount: value })
-                            if (errors.amount) {
-                              setErrors({ ...errors, amount: "" })
-                            }
-                          }}
-                        >
-                          <SelectTrigger
-                            className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
-                            style={
-                              {
-                                height: "56px",
-                                paddingLeft: "1rem",
-                                paddingRight: "1rem",
-                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                                borderColor: errors.amount ? "#ef4444" : "#e5e7eb",
-                              } as React.CSSProperties
-                            }
-                            onFocus={(e) => {
-                              e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#006bb6"
-                              e.currentTarget.style.borderWidth = "2px"
-                            }}
-                            onBlur={(e) => {
-                              e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#e5e7eb"
-                              e.currentTarget.style.borderWidth = "2px"
-                            }}
-                          >
-                            <SelectValue placeholder="Select amount..." />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-xl">
-                            <SelectItem value="50" className="text-base">
-                              SCR 50
-                            </SelectItem>
-                            <SelectItem value="100" className="text-base">
-                              SCR 100
-                            </SelectItem>
-                            <SelectItem value="250" className="text-base">
-                              SCR 250
-                            </SelectItem>
-                            <SelectItem value="500" className="text-base">
-                              SCR 500
-                            </SelectItem>
-                            <SelectItem value="1000" className="text-base">
-                              SCR 1000
-                            </SelectItem>
-                            <SelectItem value="1569" className="text-base">
-                              SCR 1569
-                            </SelectItem>
-                            <SelectItem value="2000" className="text-base">
-                              SCR 2000
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
-                      </div>
-
-                      {formData.amount && (
-                        <div
-                          className="flex items-center justify-between rounded-xl p-4"
-                          style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
-                              className="flex h-8 w-8 items-center justify-center rounded-full"
-                              style={{ backgroundColor: "#006bb6" }}
-                            >
-                              <Check className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-gray-700">Selected Plan</p>
-                              <p className="text-base font-bold text-gray-900">Unlimited {formData.amount}</p>
-                            </div>
-                          </div>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="rounded-lg bg-transparent hover:bg-opacity-10"
-                            style={{ borderColor: "rgba(0, 107, 182, 0.3)", color: "#006bb6" }}
-                          >
-                            Change
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="mb-4 flex items-center gap-3">
-                      <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
-                        style={{ backgroundColor: "#006bb6" }}
-                      >
-                        3
                       </div>
                       <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
                     </div>
@@ -646,7 +638,515 @@ export default function PaymentForm() {
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {formType !== "billpay" && (
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <div>
+                      <div className="mb-4 flex items-center gap-3">
+                        <div
+                          className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                          style={{ backgroundColor: "#006bb6" }}
+                        >
+                          2
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="rechargeType" className="text-sm font-medium text-gray-700">
+                            {formType === "airtime"
+                              ? "Recharge Type"
+                              : formType === "booster"
+                                ? "Select Booster"
+                                : "Giga Booster"}{" "}
+                            <span className="text-red-500">*</span>
+                          </Label>
+                          <Select
+                            value={formData.rechargeType}
+                            onValueChange={(value) => {
+                              setFormData({ ...formData, rechargeType: value })
+                              if (errors.rechargeType) {
+                                setErrors({ ...errors, rechargeType: "" })
+                              }
+                            }}
+                          >
+                            <SelectTrigger
+                              className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
+                              style={
+                                {
+                                  height: "56px",
+                                  paddingLeft: "1rem",
+                                  paddingRight: "1rem",
+                                  "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                  borderColor: errors.rechargeType ? "#ef4444" : "#e5e7eb",
+                                } as React.CSSProperties
+                              }
+                              onFocus={(e) => {
+                                e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#006bb6"
+                                e.currentTarget.style.borderWidth = "2px"
+                              }}
+                              onBlur={(e) => {
+                                e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#e5e7eb"
+                                e.currentTarget.style.borderWidth = "2px"
+                              }}
+                            >
+                              <SelectValue
+                                placeholder={
+                                  formType === "airtime"
+                                    ? "Select recharge type..."
+                                    : formType === "booster"
+                                      ? "Select booster..."
+                                      : "Select giga booster..."
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-xl">
+                              {formType === "airtime" ? (
+                                <>
+                                  <SelectItem value="credit" className="text-base">
+                                    Credit
+                                  </SelectItem>
+                                  <SelectItem value="local-talktime" className="text-base">
+                                    Local Talktime
+                                  </SelectItem>
+                                  <SelectItem value="jumbo-booster" className="text-base">
+                                    Jumbo Booster
+                                  </SelectItem>
+                                </>
+                              ) : formType === "booster" ? (
+                                <>
+                                  <SelectItem value="data-booster-1gb" className="text-base">
+                                    Data Booster 1GB
+                                  </SelectItem>
+                                  <SelectItem value="data-booster-5gb" className="text-base">
+                                    Data Booster 5GB
+                                  </SelectItem>
+                                  <SelectItem value="data-booster-10gb" className="text-base">
+                                    Data Booster 10GB
+                                  </SelectItem>
+                                  <SelectItem value="voice-booster-100min" className="text-base">
+                                    Voice Booster 100 Minutes
+                                  </SelectItem>
+                                  <SelectItem value="voice-booster-300min" className="text-base">
+                                    Voice Booster 300 Minutes
+                                  </SelectItem>
+                                </>
+                              ) : (
+                                <>
+                                  <SelectItem value="giga-booster-10gb" className="text-base">
+                                    Giga Booster 10GB
+                                  </SelectItem>
+                                  <SelectItem value="giga-booster-25gb" className="text-base">
+                                    Giga Booster 25GB
+                                  </SelectItem>
+                                  <SelectItem value="giga-booster-50gb" className="text-base">
+                                    Giga Booster 50GB
+                                  </SelectItem>
+                                  <SelectItem value="giga-booster-100gb" className="text-base">
+                                    Giga Booster 100GB
+                                  </SelectItem>
+                                  <SelectItem value="giga-booster-unlimited" className="text-base">
+                                    Giga Booster Unlimited
+                                  </SelectItem>
+                                </>
+                              )}
+                            </SelectContent>
+                          </Select>
+                          {errors.rechargeType && <p className="text-sm text-red-500">{errors.rechargeType}</p>}
+                        </div>
+
+                        {formType === "airtime" && (
+                          <>
+                            <div className="space-y-2">
+                              <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
+                                Amount (SCR) <span className="text-red-500">*</span>
+                              </Label>
+                              <Select
+                                value={formData.amount}
+                                onValueChange={(value) => {
+                                  setFormData({ ...formData, amount: value })
+                                  if (errors.amount) {
+                                    setErrors({ ...errors, amount: "" })
+                                  }
+                                }}
+                              >
+                                <SelectTrigger
+                                  className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
+                                  style={
+                                    {
+                                      height: "56px",
+                                      paddingLeft: "1rem",
+                                      paddingRight: "1rem",
+                                      "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                      borderColor: errors.amount ? "#ef4444" : "#e5e7eb",
+                                    } as React.CSSProperties
+                                  }
+                                  onFocus={(e) => {
+                                    e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#006bb6"
+                                    e.currentTarget.style.borderWidth = "2px"
+                                  }}
+                                  onBlur={(e) => {
+                                    e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#e5e7eb"
+                                    e.currentTarget.style.borderWidth = "2px"
+                                  }}
+                                >
+                                  <SelectValue placeholder="Select amount..." />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl">
+                                  <SelectItem value="50" className="text-base">
+                                    SCR 50
+                                  </SelectItem>
+                                  <SelectItem value="100" className="text-base">
+                                    SCR 100
+                                  </SelectItem>
+                                  <SelectItem value="250" className="text-base">
+                                    SCR 250
+                                  </SelectItem>
+                                  <SelectItem value="500" className="text-base">
+                                    SCR 500
+                                  </SelectItem>
+                                  <SelectItem value="1000" className="text-base">
+                                    SCR 1000
+                                  </SelectItem>
+                                  <SelectItem value="1569" className="text-base">
+                                    SCR 1569
+                                  </SelectItem>
+                                  <SelectItem value="2000" className="text-base">
+                                    SCR 2000
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
+                            </div>
+
+                            {formData.amount && (
+                              <div
+                                className="flex items-center justify-between rounded-xl p-4"
+                                style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className="flex h-8 w-8 items-center justify-center rounded-full"
+                                    style={{ backgroundColor: "#006bb6" }}
+                                  >
+                                    <Check className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-gray-700">Selected Plan</p>
+                                    <p className="text-base font-bold text-gray-900">{formData.amount}</p>
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="rounded-lg bg-transparent hover:bg-opacity-10"
+                                  style={{ borderColor: "rgba(0, 107, 182, 0.3)", color: "#006bb6" }}
+                                >
+                                  Change
+                                </Button>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {formType !== "airtime" && (
+                          <div className="space-y-2">
+                            <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
+                              Amount (SCR) <span className="text-red-500">*</span>
+                            </Label>
+                            <Select
+                              value={formData.amount}
+                              onValueChange={(value) => {
+                                setFormData({ ...formData, amount: value })
+                                if (errors.amount) {
+                                  setErrors({ ...errors, amount: "" })
+                                }
+                              }}
+                            >
+                              <SelectTrigger
+                                className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
+                                style={
+                                  {
+                                    height: "56px",
+                                    paddingLeft: "1rem",
+                                    paddingRight: "1rem",
+                                    "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                    borderColor: errors.amount ? "#ef4444" : "#e5e7eb",
+                                  } as React.CSSProperties
+                                }
+                                onFocus={(e) => {
+                                  e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#006bb6"
+                                  e.currentTarget.style.borderWidth = "2px"
+                                }}
+                                onBlur={(e) => {
+                                  e.currentTarget.style.borderColor = errors.amount ? "#ef4444" : "#e5e7eb"
+                                  e.currentTarget.style.borderWidth = "2px"
+                                }}
+                              >
+                                <SelectValue placeholder="Select amount..." />
+                              </SelectTrigger>
+                              <SelectContent className="rounded-xl">
+                                {formType === "booster" ? (
+                                  <>
+                                    <SelectItem value="5" className="text-base">
+                                      SCR 5
+                                    </SelectItem>
+                                    <SelectItem value="10" className="text-base">
+                                      SCR 10
+                                    </SelectItem>
+                                    <SelectItem value="20" className="text-base">
+                                      SCR 20
+                                    </SelectItem>
+                                    <SelectItem value="30" className="text-base">
+                                      SCR 30
+                                    </SelectItem>
+                                  </>
+                                ) : (
+                                  // Added amount options for broadband form type
+                                  <>
+                                    <SelectItem value="50" className="text-base">
+                                      SCR 50
+                                    </SelectItem>
+                                    <SelectItem value="100" className="text-base">
+                                      SCR 100
+                                    </SelectItem>
+                                    <SelectItem value="200" className="text-base">
+                                      SCR 200
+                                    </SelectItem>
+                                    <SelectItem value="500" className="text-base">
+                                      SCR 500
+                                    </SelectItem>
+                                    <SelectItem value="1000" className="text-base">
+                                      SCR 1000
+                                    </SelectItem>
+                                  </>
+                                )}
+                              </SelectContent>
+                            </Select>
+                            {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="mb-4 flex items-center gap-3">
+                        <div
+                          className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                          style={{ backgroundColor: "#006bb6" }}
+                        >
+                          3
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
+                          <div
+                            className="flex items-center justify-center gap-4 rounded-xl p-8"
+                            style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                          >
+                            <div
+                              className="flex gap-2 text-4xl font-bold tracking-wider md:text-5xl"
+                              style={{ color: "#006bb6" }}
+                            >
+                              {generatedCode.split("").map((digit, i) => (
+                                <span key={i}>{digit}</span>
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleRefreshCode}
+                              className="rounded-lg p-2 transition-colors hover:bg-white hover:bg-opacity-50"
+                              style={{ color: "#006bb6" }}
+                              aria-label="Refresh verification code"
+                            >
+                              <RefreshCw className="h-5 w-5" />
+                            </button>
+                          </div>
+                          <p className="text-center text-sm" style={{ color: "#006bb6" }}>
+                            Enter the code below to verify
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="verificationCode" className="text-sm font-medium text-gray-700">
+                            Enter Verification Code <span className="text-red-500">*</span>
+                          </Label>
+                          <Input
+                            id="verificationCode"
+                            value={formData.verificationCode}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, "")
+                              setFormData({ ...formData, verificationCode: value })
+                              if (errors.verificationCode) {
+                                setErrors({ ...errors, verificationCode: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.verificationCode ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter 6-digit code"
+                            maxLength={6}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.verificationCode ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.verificationCode ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                          {errors.verificationCode && <p className="text-sm text-red-500">{errors.verificationCode}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {formType === "billpay" && (
+                  <div className="grid gap-6 lg:grid-cols-2">
+                    <div>
+                      <div className="mb-4 flex items-center gap-3">
+                        <div
+                          className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                          style={{ backgroundColor: "#006bb6" }}
+                        >
+                          2
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Payment Details</h2>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
+                            Amount to pay (SR) <span className="text-red-500">*</span>
+                          </Label>
+                          <Input
+                            id="amount"
+                            type="number"
+                            value={formData.amount}
+                            onChange={(e) => {
+                              setFormData({ ...formData, amount: e.target.value })
+                              if (errors.amount) {
+                                setErrors({ ...errors, amount: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.amount ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter amount"
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.amount ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.amount ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                          {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
+                        </div>
+
+                        <div className="rounded-xl p-4" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">Service Charge (SR):</span>
+                            <span className="text-base font-semibold text-gray-900">( Visa: SR 0.00)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="mb-4 flex items-center gap-3">
+                        <div
+                          className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                          style={{ backgroundColor: "#006bb6" }}
+                        >
+                          3
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
+                          <div
+                            className="flex items-center justify-center gap-4 rounded-xl p-8"
+                            style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                          >
+                            <div
+                              className="flex gap-2 text-4xl font-bold tracking-wider md:text-5xl"
+                              style={{ color: "#006bb6" }}
+                            >
+                              {generatedCode.split("").map((digit, i) => (
+                                <span key={i}>{digit}</span>
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleRefreshCode}
+                              className="rounded-lg p-2 transition-colors hover:bg-white hover:bg-opacity-50"
+                              style={{ color: "#006bb6" }}
+                              aria-label="Refresh verification code"
+                            >
+                              <RefreshCw className="h-5 w-5" />
+                            </button>
+                          </div>
+                          <p className="text-center text-sm" style={{ color: "#006bb6" }}>
+                            Enter the code below to verify
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="verificationCode" className="text-sm font-medium text-gray-700">
+                            Enter Verification Code <span className="text-red-500">*</span>
+                          </Label>
+                          <Input
+                            id="verificationCode"
+                            value={formData.verificationCode}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, "")
+                              setFormData({ ...formData, verificationCode: value })
+                              if (errors.verificationCode) {
+                                setErrors({ ...errors, verificationCode: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.verificationCode ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter 6-digit code"
+                            maxLength={6}
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.verificationCode ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.verificationCode ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                          {errors.verificationCode && <p className="text-sm text-red-500">{errors.verificationCode}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                   <Button
@@ -659,6 +1159,10 @@ export default function PaymentForm() {
                         email: "",
                         contactNumber: "",
                         mobileNumber: "",
+                        username: "",
+                        accountNumber: "",
+                        accountName: "",
+                        customerType: "",
                         rechargeType: "",
                         amount: "",
                         verificationCode: "",
@@ -708,41 +1212,120 @@ export default function PaymentForm() {
 
                 <div>
                   <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
-                    <p className="font-semibold text-gray-900">Transaction Target:</p>
+                    <p className="font-semibold text-gray-900">
+                      {formType === "billpay" ? "Account Details:" : "Transaction Target:"}
+                    </p>
                   </div>
                   <div className="space-y-4 px-6 py-4">
-                    <div>
-                      <span className="font-medium text-gray-700">Mobile Number to be credited: </span>
-                      <span className="text-gray-900">{formData.mobileNumber}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-700">Service Type: </span>
-                      <span className="text-gray-900">
-                        {formData.rechargeType === "credit" && "Credit"}
-                        {formData.rechargeType === "local-talktime" && "Local Talktime"}
-                        {formData.rechargeType === "jumbo-booster" && "Jumbo Booster"}
-                      </span>
-                    </div>
+                    {formType === "billpay" ? (
+                      <>
+                        <div>
+                          <span className="font-medium text-gray-700">Account Number: </span>
+                          <span className="text-gray-900">{formData.accountNumber}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Account Name: </span>
+                          <span className="text-gray-900">{getMockAccountDetails(formData.accountNumber).name}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Customer Type: </span>
+                          <span className="text-gray-900">{getMockAccountDetails(formData.accountNumber).type}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <span className="font-medium text-gray-700">
+                            {formType === "broadband" ? "Username: " : "Mobile Number to be credited: "}
+                          </span>
+                          <span className="text-gray-900">
+                            {formType === "broadband" ? formData.username : formData.mobileNumber}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Service Type: </span>
+                          <span className="text-gray-900">
+                            {formData.rechargeType === "credit" && "Credit"}
+                            {formData.rechargeType === "local-talktime" && "Local Talktime"}
+                            {formData.rechargeType === "jumbo-booster" && "Jumbo Booster"}
+                            {formData.rechargeType === "data-booster-1gb" && "Data Booster 1GB"}
+                            {formData.rechargeType === "data-booster-5gb" && "Data Booster 5GB"}
+                            {formData.rechargeType === "data-booster-10gb" && "Data Booster 10GB"}
+                            {formData.rechargeType === "voice-booster-100min" && "Voice Booster 100 Minutes"}
+                            {formData.rechargeType === "voice-booster-300min" && "Voice Booster 300 Minutes"}
+                            {formData.rechargeType === "giga-booster-10gb" && "Giga Booster 10GB"}
+                            {formData.rechargeType === "giga-booster-25gb" && "Giga Booster 25GB"}
+                            {formData.rechargeType === "giga-booster-50gb" && "Giga Booster 50GB"}
+                            {formData.rechargeType === "giga-booster-100gb" && "Giga Booster 100GB"}
+                            {formData.rechargeType === "giga-booster-unlimited" && "Giga Booster Unlimited"}
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
-                    <p className="font-semibold text-gray-900">Purchase Details:</p>
+                    <p className="font-semibold text-gray-900">Payment Details:</p>
                   </div>
                   <div className="space-y-4 px-6 py-4">
-                    <div>
-                      <span className="font-medium text-gray-700">Item : </span>
-                      <span className="text-gray-900">SR{formData.amount}</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-700">Charge (SR): </span>
-                      <span className="text-gray-900">{formData.amount}.00</span>
-                    </div>
-                    <div>
-                      <span className="font-medium text-gray-700">Service Charge (SR): </span>
-                      <span className="text-gray-900">( Visa: SR 0.00)</span>
-                    </div>
+                    {formType !== "billpay" && (
+                      <div>
+                        <span className="font-medium text-gray-700">Item : </span>
+                        <span className="text-gray-900">
+                          {formType === "airtime" ? `SR${formData.amount}` : formData.rechargeType}
+                        </span>
+                      </div>
+                    )}
+                    {formType === "billpay" ? (
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="amount-confirm" className="text-sm font-medium text-gray-700">
+                            Amount to pay (SR) <span className="text-red-500">*</span>
+                          </Label>
+                          <Input
+                            id="amount-confirm"
+                            type="number"
+                            value={formData.amount}
+                            onChange={(e) => {
+                              setFormData({ ...formData, amount: e.target.value })
+                              if (errors.amount) {
+                                setErrors({ ...errors, amount: "" })
+                              }
+                            }}
+                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
+                            style={
+                              {
+                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                borderColor: errors.amount ? "#ef4444" : "",
+                              } as React.CSSProperties
+                            }
+                            placeholder="Enter amount"
+                            onFocus={(e) => {
+                              e.target.style.borderColor = errors.amount ? "#ef4444" : "#006bb6"
+                              e.target.style.borderWidth = "2px"
+                            }}
+                            onBlur={(e) => {
+                              e.target.style.borderColor = errors.amount ? "#ef4444" : ""
+                              e.target.style.borderWidth = "2px"
+                            }}
+                          />
+                          {errors.amount && <p className="text-sm text-red-500">{errors.amount}</p>}
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Service Charge (SR): </span>
+                          <span className="text-gray-900">( Visa: SR 0.00)</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <span className="font-medium text-gray-700">
+                          {formType === "billpay" ? "Amount to pay (SR): " : "Charge (SR): "}
+                        </span>
+                        <span className="text-gray-900">{formData.amount}.00</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -800,9 +1383,7 @@ export default function PaymentForm() {
                     <div>
                       <span className="font-medium text-gray-700">Item : </span>
                       <span className="text-gray-900">
-                        {formData.rechargeType === "credit" && "Credit"}
-                        {formData.rechargeType === "local-talktime" && "Local Talktime"}
-                        {formData.rechargeType === "jumbo-booster" && "Jumbo Booster"} SR{formData.amount}
+                        {formType === "airtime" ? "Credit" : formData.rechargeType} SR{formData.amount}
                       </span>
                     </div>
                   </div>
@@ -814,8 +1395,20 @@ export default function PaymentForm() {
                   </div>
                   <div className="space-y-3 px-6 py-4">
                     <div>
-                      <span className="font-medium text-gray-700">Target Number: </span>
-                      <span className="text-gray-900">{formData.mobileNumber}</span>
+                      <span className="font-medium text-gray-700">
+                        {formType === "billpay"
+                          ? "Account Number: "
+                          : formType === "broadband"
+                            ? "Username: "
+                            : "Target Number: "}
+                      </span>
+                      <span className="text-gray-900">
+                        {formType === "billpay"
+                          ? formData.accountNumber
+                          : formType === "broadband"
+                            ? formData.username
+                            : formData.mobileNumber}
+                      </span>
                     </div>
                     <div>
                       <span className="font-medium text-gray-700">Transaction Amount (SR): </span>
@@ -914,8 +1507,20 @@ export default function PaymentForm() {
                       </span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-3">
-                      <span className="font-medium text-gray-600">Mobile Number</span>
-                      <span className="font-semibold text-gray-900">{formData.mobileNumber}</span>
+                      <span className="font-medium text-gray-600">
+                        {formType === "billpay"
+                          ? "Account Number"
+                          : formType === "broadband"
+                            ? "Username"
+                            : "Mobile Number"}
+                      </span>
+                      <span className="font-semibold text-gray-900">
+                        {formType === "billpay"
+                          ? formData.accountNumber
+                          : formType === "broadband"
+                            ? formData.username
+                            : formData.mobileNumber}
+                      </span>
                     </div>
                     <div className="flex justify-between border-b border-gray-100 pb-3">
                       <span className="font-medium text-gray-600">Amount</span>
