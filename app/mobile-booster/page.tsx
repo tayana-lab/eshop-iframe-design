@@ -114,39 +114,50 @@ export default function MobileBoosterPage() {
     { id: "receipt" as Step, label: "Receipt", icon: Receipt },
   ]
 
+  const getStepIndex = (step: Step) => {
+    return steps.findIndex((s) => s.id === step)
+  }
+
+  const currentStepIndex = getStepIndex(currentStep)
+
   return (
     <div>
       <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-6xl px-4 py-3 md:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-3 py-2 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           <Link href="/">
-            <Button variant="ghost" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+            >
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
               Back to Main Menu
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="min-h-screen bg-gray-50 px-4 py-4 md:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-4 flex items-center justify-start gap-4 text-center">
+          <div className="mb-3 sm:mb-4 flex items-center justify-start gap-2 sm:gap-4">
             <div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
+              className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-xl sm:rounded-2xl shadow-lg"
               style={{ backgroundColor: "#006bb6" }}
             >
-              {currentStep === "customer" && <User className="h-8 w-8 text-white" />}
-              {currentStep === "confirmation" && <FileCheck className="h-8 w-8 text-white" />}
-              {currentStep === "payment" && <CreditCard className="h-8 w-8 text-white" />}
-              {currentStep === "receipt" && <Receipt className="h-8 w-8 text-white" />}
+              {currentStep === "customer" && <User className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
+              {currentStep === "confirmation" && (
+                <FileCheck className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
+              )}
+              {currentStep === "payment" && <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
+              {currentStep === "receipt" && <Receipt className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
             </div>
             <div className="text-left">
-              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                 {currentStep === "customer" && "Customer Details"}
                 {currentStep === "confirmation" && "Confirmation"}
                 {currentStep === "payment" && "Payment"}
                 {currentStep === "receipt" && "Receipt"}
               </h1>
-              <p className="mt-1 text-base text-gray-500 md:text-lg">
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg text-gray-500">
                 {currentStep === "customer" && "Enter your details below and select your mobile booster"}
                 {currentStep === "confirmation" && "Review your information before proceeding"}
                 {currentStep === "payment" && "Select your payment method"}
@@ -155,8 +166,55 @@ export default function MobileBoosterPage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
-            <div className="p-4 md:p-6 lg:p-8">
+          <div className="mb-6 sm:mb-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                {steps.map((step, index) => {
+                  const isCompleted = index < currentStepIndex
+                  const isCurrent = index === currentStepIndex
+                  const isLast = index === steps.length - 1
+
+                  return (
+                    <div key={step.id} className="flex items-center flex-1">
+                      {/* Step Circle and Label */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div
+                          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm sm:text-base font-semibold transition-all ${
+                            isCurrent
+                              ? "bg-blue-600 text-white"
+                              : isCompleted
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-200 text-gray-500"
+                          }`}
+                          style={isCurrent || isCompleted ? { backgroundColor: "#006bb6" } : {}}
+                        >
+                          {index + 1}
+                        </div>
+                        <span
+                          className={`text-sm sm:text-base font-medium whitespace-nowrap ${
+                            isCurrent ? "text-blue-600" : isCompleted ? "text-gray-900" : "text-gray-400"
+                          }`}
+                          style={isCurrent ? { color: "#006bb6" } : {}}
+                        >
+                          {step.label}
+                        </span>
+                      </div>
+
+                      {/* Connector Line */}
+                      {!isLast && (
+                        <div className="flex-1 mx-2 sm:mx-4">
+                          <div className="h-0.5 w-full bg-gray-200" />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8">
               {currentStep === "customer" && (
                 <div className="space-y-6">
                   <div>

@@ -117,39 +117,50 @@ export default function AirtimePage() {
     { id: "receipt" as Step, label: "Receipt", icon: Receipt },
   ]
 
+  const getStepIndex = (step: Step) => {
+    return steps.findIndex((s) => s.id === step)
+  }
+
+  const currentStepIndex = getStepIndex(currentStep)
+
   return (
     <div>
       <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-6xl px-4 py-3 md:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-3 py-2 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           <Link href="/">
-            <Button variant="ghost" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+            >
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
               Back to Main Menu
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="min-h-screen bg-gray-50 px-4 py-4 md:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-4 flex items-center justify-start gap-4 text-center">
+          <div className="mb-3 sm:mb-4 flex items-center justify-start gap-2 sm:gap-4">
             <div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
+              className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-xl sm:rounded-2xl shadow-lg"
               style={{ backgroundColor: "#006bb6" }}
             >
-              {currentStep === "customer" && <User className="h-8 w-8 text-white" />}
-              {currentStep === "confirmation" && <FileCheck className="h-8 w-8 text-white" />}
-              {currentStep === "payment" && <CreditCard className="h-8 w-8 text-white" />}
-              {currentStep === "receipt" && <Receipt className="h-8 w-8 text-white" />}
+              {currentStep === "customer" && <User className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
+              {currentStep === "confirmation" && (
+                <FileCheck className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />
+              )}
+              {currentStep === "payment" && <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
+              {currentStep === "receipt" && <Receipt className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white" />}
             </div>
             <div className="text-left">
-              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                 {currentStep === "customer" && "Customer Details"}
                 {currentStep === "confirmation" && "Confirmation"}
                 {currentStep === "payment" && "Payment"}
                 {currentStep === "receipt" && "Receipt"}
               </h1>
-              <p className="mt-1 text-base text-gray-500 md:text-lg">
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg text-gray-500">
                 {currentStep === "customer" && "Enter your details below and recharge your mobile anytime"}
                 {currentStep === "confirmation" && "Review your information before proceeding"}
                 {currentStep === "payment" && "Select your payment method"}
@@ -158,23 +169,71 @@ export default function AirtimePage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
-            <div className="p-4 md:p-6 lg:p-8">
+          <div className="mb-6 sm:mb-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                {steps.map((step, index) => {
+                  const isCompleted = index < currentStepIndex
+                  const isCurrent = index === currentStepIndex
+                  const isLast = index === steps.length - 1
+
+                  return (
+                    <div key={step.id} className="flex items-center flex-1">
+                      {/* Step Circle and Label */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div
+                          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm sm:text-base font-semibold transition-all ${
+                            isCurrent
+                              ? "bg-blue-600 text-white"
+                              : isCompleted
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-200 text-gray-500"
+                          }`}
+                          style={isCurrent || isCompleted ? { backgroundColor: "#006bb6" } : {}}
+                        >
+                          {index + 1}
+                        </div>
+                        <span
+                          className={`text-sm sm:text-base font-medium whitespace-nowrap ${
+                            isCurrent ? "text-blue-600" : isCompleted ? "text-gray-900" : "text-gray-400"
+                          }`}
+                          style={isCurrent ? { color: "#006bb6" } : {}}
+                        >
+                          {step.label}
+                        </span>
+                      </div>
+
+                      {/* Connector Line */}
+                      {!isLast && (
+                        <div className="flex-1 mx-2 sm:mx-4">
+                          <div className="h-0.5 w-full bg-gray-200" />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+          {/* </CHANGE> */}
+
+          <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8">
               {currentStep === "customer" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
-                    <div className="mb-4 flex items-center gap-3">
+                    <div className="mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                       <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-base sm:text-lg font-bold text-white"
                         style={{ backgroundColor: "#006bb6" }}
                       >
                         1
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
+                      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Personal Details</h2>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="grid gap-4 md:grid-cols-3">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         <div className="space-y-2">
                           <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                             First Name <span className="text-red-500">*</span>
@@ -270,7 +329,7 @@ export default function AirtimePage() {
                         </div>
                       </div>
 
-                      <div className="grid gap-4 md:grid-cols-2">
+                      <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="contactNumber" className="text-sm font-medium text-gray-700">
                             Contact Number
@@ -340,7 +399,7 @@ export default function AirtimePage() {
                     </div>
                   </div>
 
-                  <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                     <div>
                       <div className="mb-4 flex items-center gap-3">
                         <div
@@ -560,7 +619,7 @@ export default function AirtimePage() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
+                  <div className="flex flex-col gap-3 sm:gap-4 border-t border-gray-100 pt-4 sm:pt-6 sm:flex-row sm:justify-end">
                     <Button
                       type="button"
                       variant="outline"
@@ -579,13 +638,13 @@ export default function AirtimePage() {
                         })
                         setErrors({})
                       }}
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-12 sm:h-14 rounded-xl border-2 border-gray-200 px-6 sm:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Reset
                     </Button>
                     <Button
                       onClick={handleNext}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
+                      className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-sm sm:text-base font-semibold text-white shadow-lg"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -598,7 +657,7 @@ export default function AirtimePage() {
               )}
 
               {currentStep === "confirmation" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div className="rounded-xl border border-gray-200 p-6">
                     <p className="text-sm font-medium text-gray-500">eShop Customer:</p>
                     <p className="mt-1 text-xl font-bold text-gray-900">
@@ -669,18 +728,18 @@ export default function AirtimePage() {
                     </Label>
                   </div>
 
-                  <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
+                  <div className="flex flex-col gap-3 sm:gap-4 border-t border-gray-100 pt-4 sm:pt-6 sm:flex-row sm:justify-end">
                     <Button
                       onClick={handleBack}
                       variant="outline"
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-12 sm:h-14 rounded-xl border-2 border-gray-200 px-6 sm:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleNext}
                       disabled={!formData.confirmed}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg disabled:opacity-50"
+                      className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-sm sm:text-base font-semibold text-white shadow-lg disabled:opacity-50"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -693,7 +752,7 @@ export default function AirtimePage() {
               )}
 
               {currentStep === "payment" && (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div>
                     <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
                       <p className="font-semibold text-gray-900">Transaction Details:</p>
@@ -769,17 +828,17 @@ export default function AirtimePage() {
                     </ol>
                   </div>
 
-                  <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
+                  <div className="flex flex-col gap-3 sm:gap-4 border-t border-gray-100 pt-4 sm:pt-6 sm:flex-row sm:justify-end">
                     <Button
                       onClick={handleBack}
                       variant="outline"
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-12 sm:h-14 rounded-xl border-2 border-gray-200 px-6 sm:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleNext}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
+                      className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-sm sm:text-base font-semibold text-white shadow-lg"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -792,56 +851,60 @@ export default function AirtimePage() {
               )}
 
               {currentStep === "receipt" && (
-                <div className="space-y-6 text-center">
-                  <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
-                    <Check className="h-12 w-12 text-green-600" strokeWidth={3} />
+                <div className="space-y-4 sm:space-y-6 text-center">
+                  <div className="mx-auto flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full bg-green-100">
+                    <Check className="h-10 w-10 sm:h-12 sm:w-12 text-green-600" strokeWidth={3} />
                   </div>
 
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-900">Payment Successful!</h2>
-                    <p className="mt-2 text-lg text-gray-600">Your transaction has been completed</p>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">Payment Successful!</h2>
+                    <p className="mt-2 text-base sm:text-lg text-gray-600">Your transaction has been completed</p>
                   </div>
 
-                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-8 text-left">
-                    <h3 className="mb-6 text-xl font-bold text-gray-900">Transaction Receipt</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Transaction ID</span>
-                        <span className="font-mono font-semibold text-gray-900">
+                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-4 sm:p-6 md:p-8 text-left">
+                    <h3 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-gray-900">Transaction Receipt</h3>
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Transaction ID</span>
+                        <span className="font-mono font-semibold text-gray-900 text-sm sm:text-base break-all">
                           {Math.random().toString(36).substr(2, 9).toUpperCase()}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Customer</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Customer</span>
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">
                           {formData.firstName} {formData.lastName}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Mobile Number</span>
-                        <span className="font-semibold text-gray-900">{formData.mobileNumber}</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Mobile Number</span>
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                          {formData.mobileNumber}
+                        </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Amount</span>
-                        <span className="font-semibold text-gray-900">SR {formData.amount}.00</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Amount</span>
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">
+                          SR {formData.amount}.00
+                        </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-700">Payment Method</span>
-                        <span className="font-semibold text-gray-900">Visa Card</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-700 text-sm sm:text-base">Payment Method</span>
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">Visa Card</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-600">Date & Time</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Date & Time</span>
+                        <span className="font-semibold text-gray-900 text-sm sm:text-base">
                           {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+                  <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:justify-center">
                     <Button
                       onClick={handleNewTransaction}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
+                      className="h-12 sm:h-14 rounded-xl px-6 sm:px-8 text-sm sm:text-base font-semibold text-white shadow-lg"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -851,7 +914,7 @@ export default function AirtimePage() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-12 sm:h-14 rounded-xl border-2 border-gray-200 px-6 sm:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Download Receipt
                     </Button>

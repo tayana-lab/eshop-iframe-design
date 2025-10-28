@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowLeft, Check, User, FileCheck, CreditCard, Receipt, RefreshCw } from "lucide-react"
+import { ArrowLeft, RefreshCw, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -106,55 +106,116 @@ export default function BroadbandPage() {
   }
 
   const steps = [
-    { id: "customer" as Step, label: "Customer Details", icon: User },
-    { id: "confirmation" as Step, label: "Confirmation", icon: FileCheck },
-    { id: "payment" as Step, label: "Payment", icon: CreditCard },
-    { id: "receipt" as Step, label: "Receipt", icon: Receipt },
+    { id: "customer" as Step, label: "Customer Details" },
+    { id: "confirmation" as Step, label: "Confirmation" },
+    { id: "payment" as Step, label: "Payment" },
+    { id: "receipt" as Step, label: "Receipt" },
   ]
 
   return (
     <div>
       <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-6xl px-4 py-3 md:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-3 py-2 sm:px-4 sm:py-3 md:px-6 lg:px-8">
           <Link href="/">
-            <Button variant="ghost" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" />
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 text-sm sm:text-base"
+            >
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
               Back to Main Menu
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="min-h-screen bg-gray-50 px-4 py-4 md:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-4 flex items-center justify-start gap-4 text-center">
-            <div
-              className="flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg"
-              style={{ backgroundColor: "#006bb6" }}
-            >
-              {currentStep === "customer" && <User className="h-8 w-8 text-white" />}
-              {currentStep === "confirmation" && <FileCheck className="h-8 w-8 text-white" />}
-              {currentStep === "payment" && <CreditCard className="h-8 w-8 text-white" />}
-              {currentStep === "receipt" && <Receipt className="h-8 w-8 text-white" />}
-            </div>
-            <div className="text-left">
-              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
-                {currentStep === "customer" && "Customer Details"}
-                {currentStep === "confirmation" && "Confirmation"}
-                {currentStep === "payment" && "Payment"}
-                {currentStep === "receipt" && "Receipt"}
-              </h1>
-              <p className="mt-1 text-base text-gray-500 md:text-lg">
-                {currentStep === "customer" && "Enter your details below and select your broadband giga booster"}
-                {currentStep === "confirmation" && "Review your information before proceeding"}
-                {currentStep === "payment" && "Select your payment method"}
-                {currentStep === "receipt" && "Transaction completed successfully"}
-              </p>
+          <div className="mb-6 sm:mb-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
+              {/* Header Section */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div
+                    className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl text-white"
+                    style={{ backgroundColor: "#006bb6" }}
+                  >
+                    <svg className="h-6 w-6 sm:h-8 sm:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                      {currentStep === "customer" && "Customer Details"}
+                      {currentStep === "confirmation" && "Confirmation"}
+                      {currentStep === "payment" && "Payment"}
+                      {currentStep === "receipt" && "Receipt"}
+                    </h1>
+                    <p className="text-sm sm:text-base text-gray-600 mt-1">
+                      {currentStep === "customer" && "Enter your details below and select your broadband service"}
+                      {currentStep === "confirmation" && "Review and confirm your transaction details"}
+                      {currentStep === "payment" && "Complete your payment securely"}
+                      {currentStep === "receipt" && "Your transaction is complete"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stepper */}
+              <div className="flex items-center justify-between">
+                {steps.map((step, index) => {
+                  const getStepIndex = (step: Step) => steps.findIndex((s) => s.id === step)
+                  const currentStepIndex = getStepIndex(currentStep)
+                  const isCompleted = index < currentStepIndex
+                  const isCurrent = index === currentStepIndex
+                  const isLast = index === steps.length - 1
+
+                  return (
+                    <div key={step.id} className="flex items-center flex-1">
+                      {/* Step Circle and Label */}
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div
+                          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm sm:text-base font-semibold transition-all ${
+                            isCurrent
+                              ? "bg-blue-600 text-white"
+                              : isCompleted
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-200 text-gray-500"
+                          }`}
+                          style={isCurrent || isCompleted ? { backgroundColor: "#006bb6" } : {}}
+                        >
+                          {index + 1}
+                        </div>
+                        <span
+                          className={`text-sm sm:text-base font-medium whitespace-nowrap ${
+                            isCurrent ? "text-blue-600" : isCompleted ? "text-gray-900" : "text-gray-400"
+                          }`}
+                          style={isCurrent ? { color: "#006bb6" } : {}}
+                        >
+                          {step.label}
+                        </span>
+                      </div>
+
+                      {/* Connector Line */}
+                      {!isLast && (
+                        <div className="flex-1 mx-2 sm:mx-4">
+                          <div className="h-0.5 w-full bg-gray-200" />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           </div>
+          {/* </CHANGE> */}
 
-          <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
-            <div className="p-4 md:p-6 lg:p-8">
+          <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
+            <div className="p-3 sm:p-4 md:p-6 lg:p-8">
               {currentStep === "customer" && (
                 <div className="space-y-6">
                   <div>
@@ -479,6 +540,16 @@ export default function BroadbandPage() {
                     </div>
                   </div>
 
+                  <div className="rounded-xl p-6" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
+                    <p className="mb-3 font-semibold text-gray-900">Note:</p>
+                    <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700">
+                      <li>Please ensure that the details you have provided above are correct before proceeding.</li>
+                      <li className="text-red-600">
+                        *Not allowed - This item is not allowed through this Payment Gateway.
+                      </li>
+                    </ol>
+                  </div>
+
                   <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                     <Button
                       type="button"
@@ -665,16 +736,6 @@ export default function BroadbandPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-xl p-6" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
-                    <p className="mb-3 font-semibold text-gray-900">Note:</p>
-                    <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700">
-                      <li>Please ensure that the details you have provided above are correct before proceeding.</li>
-                      <li className="text-red-600">
-                        *Not allowed - This item is not allowed through this Payment Gateway.
-                      </li>
-                    </ol>
-                  </div>
-
                   <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                     <Button
                       onClick={handleBack}
@@ -737,7 +798,7 @@ export default function BroadbandPage() {
                           {formData.gigaBooster === "unlimited" && "Unlimited"}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between border-b border-gray-100 pb-3">
                         <span className="font-medium text-gray-600">Payment Method</span>
                         <span className="font-semibold text-gray-900">Visa Card</span>
                       </div>
