@@ -811,6 +811,14 @@ export default function MobileBoosterPage() {
                     >
                       Download Receipt
                     </Button>
+                    <Link href="/">
+                      <Button
+                        variant="outline"
+                        className="h-14 w-full rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      >
+                        Back to Main Menu
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               )}

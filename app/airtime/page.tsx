@@ -557,11 +557,11 @@ export default function AirtimePage() {
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
                           <div
-                            className="flex items-center justify-center gap-4 rounded-xl p-8"
+                            className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
                             style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
                           >
                             <div
-                              className="flex gap-2 text-4xl font-bold tracking-wider md:text-5xl"
+                              className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
                               style={{ color: "#006bb6" }}
                             >
                               {generatedCode.split("").map((digit, i) => (
@@ -575,9 +575,10 @@ export default function AirtimePage() {
                               style={{ color: "#006bb6" }}
                               aria-label="Refresh verification code"
                             >
-                              <RefreshCw className="h-5 w-5" />
+                              <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                           </div>
+                          {/* </CHANGE> */}
                           <p className="text-center text-sm" style={{ color: "#006bb6" }}>
                             Enter the code below to verify
                           </p>

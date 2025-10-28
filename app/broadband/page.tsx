@@ -130,42 +130,43 @@ export default function BroadbandPage() {
 
       <div className="min-h-screen bg-gray-50 px-3 py-3 sm:px-4 sm:py-4 md:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
+          <div className="mb-3 sm:mb-4 flex items-center justify-start gap-2 sm:gap-4">
+            <div
+              className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 items-center justify-center rounded-xl sm:rounded-2xl shadow-lg"
+              style={{ backgroundColor: "#006bb6" }}
+            >
+              <svg
+                className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            <div className="text-left">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
+                {currentStep === "customer" && "Customer Details"}
+                {currentStep === "confirmation" && "Confirmation"}
+                {currentStep === "payment" && "Payment"}
+                {currentStep === "receipt" && "Receipt"}
+              </h1>
+              <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg text-gray-500">
+                {currentStep === "customer" && "Enter your details below and select your broadband service"}
+                {currentStep === "confirmation" && "Review your information before proceeding"}
+                {currentStep === "payment" && "Select your payment method"}
+                {currentStep === "receipt" && "Transaction completed successfully"}
+              </p>
+            </div>
+          </div>
+
           <div className="mb-6 sm:mb-8">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              {/* Header Section */}
-              <div className="mb-6">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <div
-                    className="flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl text-white"
-                    style={{ backgroundColor: "#006bb6" }}
-                  >
-                    <svg className="h-6 w-6 sm:h-8 sm:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-                      {currentStep === "customer" && "Customer Details"}
-                      {currentStep === "confirmation" && "Confirmation"}
-                      {currentStep === "payment" && "Payment"}
-                      {currentStep === "receipt" && "Receipt"}
-                    </h1>
-                    <p className="text-sm sm:text-base text-gray-600 mt-1">
-                      {currentStep === "customer" && "Enter your details below and select your broadband service"}
-                      {currentStep === "confirmation" && "Review and confirm your transaction details"}
-                      {currentStep === "payment" && "Complete your payment securely"}
-                      {currentStep === "receipt" && "Your transaction is complete"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Stepper */}
               <div className="flex items-center justify-between">
                 {steps.map((step, index) => {
                   const getStepIndex = (step: Step) => steps.findIndex((s) => s.id === step)
@@ -212,7 +213,6 @@ export default function BroadbandPage() {
               </div>
             </div>
           </div>
-          {/* </CHANGE> */}
 
           <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
             <div className="p-3 sm:p-4 md:p-6 lg:p-8">
@@ -478,11 +478,11 @@ export default function BroadbandPage() {
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
                           <div
-                            className="flex items-center justify-center gap-4 rounded-xl p-8"
+                            className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
                             style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
                           >
                             <div
-                              className="flex gap-2 text-4xl font-bold tracking-wider md:text-5xl"
+                              className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
                               style={{ color: "#006bb6" }}
                             >
                               {generatedCode.split("").map((digit, i) => (
@@ -496,7 +496,7 @@ export default function BroadbandPage() {
                               style={{ color: "#006bb6" }}
                               aria-label="Refresh verification code"
                             >
-                              <RefreshCw className="h-5 w-5" />
+                              <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                           </div>
                           <p className="text-center text-sm" style={{ color: "#006bb6" }}>
