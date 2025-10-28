@@ -469,14 +469,14 @@ export default function MobileBoosterPage() {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
+                                               <div
+                          className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
+                          style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                        >
                           <div
-                            className="flex items-center justify-center gap-4 rounded-xl p-8"
-                            style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                            className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
+                            style={{ color: "#006bb6" }}
                           >
-                            <div
-                              className="flex gap-2 text-4xl font-bold tracking-wider md:text-5xl"
-                              style={{ color: "#006bb6" }}
-                            >
                               {generatedCode.split("").map((digit, i) => (
                                 <span key={i}>{digit}</span>
                               ))}
