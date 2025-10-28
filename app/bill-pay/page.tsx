@@ -297,8 +297,8 @@ export default function BillPayPage() {
             </div>
           </div>
 
-          <div className="max-w-3xl mb-4 mt-4">
-            <div className="flex items-center justify-between">
+          <div className="max-w-4xl mb-8 mt-6">
+            <div className="flex items-center justify-between bg-white rounded-xl shadow-sm border border-gray-200 px-8 py-6">
               {steps.map((step, index) => {
                 const stepIndex = steps.findIndex((s) => s.id === currentStep)
                 const isActive = index === stepIndex
@@ -306,20 +306,19 @@ export default function BillPayPage() {
                 const isLast = index === steps.length - 1
 
                 return (
-                  <div key={step.id} className="flex flex-1 items-center">
-                    <div className="flex flex-col items-center">
+                  <div key={step.id} className="flex items-center flex-1">
+                    <div className="flex items-center gap-3">
                       <div
-                        className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-4 transition-all duration-300"
+                        className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 flex-shrink-0"
                         style={{
-                          backgroundColor: isActive || isCompleted ? "#006bb6" : "#ffffff",
-                          borderColor: isActive || isCompleted ? "#006bb6" : "#d1d5db",
+                          backgroundColor: isCompleted || isActive ? "#006bb6" : "#e5e7eb",
                         }}
                       >
                         {isCompleted ? (
-                          <Check className="h-6 w-6 text-white" strokeWidth={3} />
+                          <Check className="h-5 w-5 text-white" strokeWidth={3} />
                         ) : (
                           <span
-                            className="text-sm font-bold"
+                            className="text-sm font-semibold"
                             style={{
                               color: isActive ? "#ffffff" : "#9ca3af",
                             }}
@@ -329,9 +328,10 @@ export default function BillPayPage() {
                         )}
                       </div>
                       <span
-                        className="mt-2 text-xs font-medium md:text-sm"
+                        className="text-sm font-medium whitespace-nowrap transition-colors duration-300"
                         style={{
-                          color: isActive || isCompleted ? "#006bb6" : "#9ca3af",
+                          color: isActive ? "#111827" : isCompleted ? "#111827" : "#9ca3af",
+                          fontWeight: isActive ? 600 : 500,
                         }}
                       >
                         {step.label}
@@ -339,9 +339,9 @@ export default function BillPayPage() {
                     </div>
 
                     {!isLast && (
-                      <div className="relative flex-1 px-4" style={{ marginTop: "-32px" }}>
+                      <div className="flex-1 mx-4">
                         <div
-                          className="h-1 w-full rounded-full transition-all duration-300"
+                          className="h-0.5 w-full transition-all duration-300"
                           style={{
                             backgroundColor: isCompleted ? "#006bb6" : "#e5e7eb",
                           }}
@@ -353,6 +353,7 @@ export default function BillPayPage() {
               })}
             </div>
           </div>
+          {/* </CHANGE> */}
 
           <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
             <div className="p-4 md:p-6 lg:p-8">

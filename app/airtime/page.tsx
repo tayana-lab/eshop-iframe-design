@@ -158,64 +158,68 @@ export default function AirtimePage() {
             </div>
           </div>
 
-          <div className="max-w-3xl mb-4 mt-4">
-            <div className="flex items-center justify-between">
+          <div className="max-w-4xl mb-8 mt-6">
+            <div className="flex items-start justify-between bg-white rounded-xl shadow-sm border border-gray-200 px-8 py-6">
               {steps.map((step, index) => {
                 const stepIndex = steps.findIndex((s) => s.id === currentStep)
                 const isActive = index === stepIndex
                 const isCompleted = index < stepIndex
                 const isLast = index === steps.length - 1
+                const StepIcon = step.icon
 
                 return (
-                  <div key={step.id} className="flex flex-1 items-center">
-                    <div className="relative flex flex-col items-center">
+                  <div key={step.id} className="flex items-center flex-1">
+                    <div className="flex flex-col items-center gap-2 flex-1">
                       <div
-                        className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full border-4 transition-all duration-300"
+                        className="flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 flex-shrink-0"
                         style={{
-                          backgroundColor: isActive || isCompleted ? "#006bb6" : "#ffffff",
-                          borderColor: isActive || isCompleted ? "#006bb6" : "#d1d5db",
+                          backgroundColor: isCompleted ? "#10b981" : isActive ? "#006bb6" : "#e5e7eb",
                         }}
                       >
                         {isCompleted ? (
                           <Check className="h-6 w-6 text-white" strokeWidth={3} />
                         ) : (
-                          <span
-                            className="text-sm font-bold"
-                            style={{
-                              color: isActive ? "#ffffff" : "#9ca3af",
-                            }}
-                          >
-                            {index + 1}
-                          </span>
+                          <StepIcon className="h-6 w-6 text-white" strokeWidth={2} />
                         )}
                       </div>
-                      <span
-                        className="mt-2 text-xs font-medium md:text-sm text-center"
-                        style={{
-                          color: isActive || isCompleted ? "#006bb6" : "#9ca3af",
-                        }}
-                      >
-                        {step.label}
-                      </span>
+                      <div className="text-center">
+                        <p className="text-xs text-gray-500 mb-1">STEP {index + 1}</p>
+                        <p
+                          className="text-sm font-medium whitespace-nowrap transition-colors duration-300"
+                          style={{
+                            color: isActive || isCompleted ? "#111827" : "#9ca3af",
+                            fontWeight: isActive ? 600 : 500,
+                          }}
+                        >
+                          {step.label}
+                        </p>
+                        <p
+                          className="text-xs mt-1 font-medium"
+                          style={{
+                            color: isCompleted ? "#10b981" : isActive ? "#006bb6" : "#9ca3af",
+                          }}
+                        >
+                          {isCompleted ? "Completed" : isActive ? "In Progress" : "Pending"}
+                        </p>
+                      </div>
                     </div>
 
                     {!isLast && (
-                      <div className="relative flex-1 mx-2" style={{ height: "48px", marginTop: "-24px" }}>
+                      <div className="flex-1 mx-4" style={{ marginTop: "-60px" }}>
                         <div
-                          className="absolute top-1/2 left-0 right-0 h-1 rounded-full transition-all duration-300"
+                          className="h-1 w-full transition-all duration-300 rounded-full"
                           style={{
-                            backgroundColor: isCompleted ? "#006bb6" : "#e5e7eb",
-                            transform: "translateY(-50%)",
+                            backgroundColor: isCompleted ? "#10b981" : "#e5e7eb",
                           }}
                         />
                       </div>
                     )}
-                    {/* </CHANGE> */}
                   </div>
                 )
               })}
             </div>
           </div>
+          {/* </CHANGE> */}
 
           <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
             <div className="p-4 md:p-6 lg:p-8">
