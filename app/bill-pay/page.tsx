@@ -37,6 +37,26 @@ const getAccountDetails = (accountNumber: string) => {
   }
 }
 
+const getBillAmount = (accountNumber: string): string => {
+  // Mock bill amounts for different accounts
+  const mockBillAmounts: Record<string, string> = {
+    "1001": "150.00",
+    "1002": "275.50",
+    "1003": "189.99",
+    "1004": "425.00",
+    "1005": "95.75",
+  }
+
+  // Return mock bill amount if account exists, otherwise generate random amount
+  if (mockBillAmounts[accountNumber]) {
+    return mockBillAmounts[accountNumber]
+  }
+
+  // Generate random bill amount between 50 and 500
+  const randomAmount = (Math.random() * 450 + 50).toFixed(2)
+  return randomAmount
+}
+
 export default function BillPayPage() {
   const [currentStep, setCurrentStep] = useState<Step>("customer")
   const [generatedCode, setGeneratedCode] = useState("")
@@ -55,15 +75,23 @@ export default function BillPayPage() {
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [accountDetails, setAccountDetails] = useState<{ name: string; type: string } | null>(null)
+  const [billAmount, setBillAmount] = useState<string>("")
 
   useEffect(() => {
     setGeneratedCode(Math.floor(100000 + Math.random() * 900000).toString())
     setTransactionId(Math.floor(10000000000000 + Math.random() * 90000000000000).toString())
   }, [])
 
+  useEffect(() => {
+    if (currentStep === "confirmation" && formData.accountNumber && !formData.amount) {
+      const amount = getBillAmount(formData.accountNumber)
+      setBillAmount(amount)
+      setFormData((prev) => ({ ...prev, amount }))
+    }
+  }, [currentStep, formData.accountNumber, formData.amount])
+
   const calculateServiceCharge = () => {
-    const amount = Number.parseFloat(formData.amount) || 0
-    return (amount * 0.02).toFixed(2)
+    return "0.00"
   }
 
   const validateCustomerDetails = () => {
@@ -112,6 +140,8 @@ export default function BillPayPage() {
       if (!validateCustomerDetails()) return
       const details = getAccountDetails(formData.accountNumber)
       setAccountDetails(details)
+      const amount = getBillAmount(formData.accountNumber)
+      setBillAmount(amount)
     }
 
     if (currentStep === "confirmation" && !validateConfirmation()) return
@@ -301,7 +331,6 @@ export default function BillPayPage() {
               </p>
             </div>
           </div>
-          {/* </CHANGE> */}
 
           <div className="mb-6 sm:mb-8">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
@@ -351,7 +380,6 @@ export default function BillPayPage() {
               </div>
             </div>
           </div>
-          {/* </CHANGE> */}
 
           <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
             <div className="p-3 sm:p-4 md:p-6 lg:p-8">
@@ -572,7 +600,6 @@ export default function BillPayPage() {
                             <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
                           </button>
                         </div>
-                        {/* </CHANGE> */}
                         <p className="text-center text-sm" style={{ color: "#006bb6" }}>
                           Enter the code below to verify
                         </p>
@@ -673,7 +700,6 @@ export default function BillPayPage() {
                           <span className="text-gray-900">{formData.contactNumber}</span>
                         </div>
                       )}
-                      {/* </CHANGE> */}
                     </div>
                   </div>
 
@@ -702,6 +728,15 @@ export default function BillPayPage() {
                       <p className="font-semibold text-gray-900">Payment Details:</p>
                     </div>
                     <div className="space-y-4 px-6 py-4">
+                      <div className="rounded-lg p-4" style={{ backgroundColor: "rgba(0, 107, 182, 0.08)" }}>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold text-gray-900">Current Bill Amount:</span>
+                          <span className="text-2xl font-bold" style={{ color: "#006bb6" }}>
+                            SR {billAmount}
+                          </span>
+                        </div>
+                      </div>
+
                       <div className="space-y-2">
                         <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
                           Amount to pay (SR) <span className="text-red-500">*</span>
@@ -952,8 +987,8 @@ export default function BillPayPage() {
                           ).toFixed(2)}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-700">Payment Method</span>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">Payment Method</span>
                         <span className="font-semibold text-gray-900">Visa Card</span>
                       </div>
                       <div className="flex justify-between">
