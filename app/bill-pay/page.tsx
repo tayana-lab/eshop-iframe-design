@@ -45,7 +45,6 @@ export default function BillPayPage() {
     firstName: "",
     lastName: "",
     email: "",
-    mobileNumber: "",
     contactNumber: "",
     accountNumber: "",
     amount: "",
@@ -76,11 +75,6 @@ export default function BillPayPage() {
       newErrors.email = "Email is required"
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address"
-    }
-    if (!formData.mobileNumber.trim()) {
-      newErrors.mobileNumber = "Mobile number is required"
-    } else if (formData.mobileNumber.length !== 7) {
-      newErrors.mobileNumber = "Mobile number must be 7 digits"
     }
     if (formData.contactNumber && formData.contactNumber.length !== 7) {
       newErrors.contactNumber = "Contact number must be 7 digits"
@@ -151,7 +145,6 @@ export default function BillPayPage() {
       firstName: "",
       lastName: "",
       email: "",
-      mobileNumber: "",
       contactNumber: "",
       accountNumber: "",
       amount: "",
@@ -473,40 +466,7 @@ export default function BillPayPage() {
                         </div>
                       </div>
 
-                      <div className="grid gap-4 md:grid-cols-3">
-                        <div className="space-y-2">
-                          <Label htmlFor="mobileNumber" className="text-sm font-medium text-gray-700">
-                            Mobile Number <span className="text-red-500">*</span>
-                          </Label>
-                          <Input
-                            id="mobileNumber"
-                            value={formData.mobileNumber}
-                            onChange={(e) => {
-                              const value = e.target.value.replace(/\D/g, "")
-                              setFormData({ ...formData, mobileNumber: value })
-                              if (errors.mobileNumber) setErrors({ ...errors, mobileNumber: "" })
-                            }}
-                            className="h-14 rounded-xl border-2 border-gray-200 bg-white px-4 text-base transition-all focus:ring-[3px]"
-                            style={
-                              {
-                                "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                                borderColor: errors.mobileNumber ? "#ef4444" : "",
-                              } as React.CSSProperties
-                            }
-                            placeholder="Enter your mobile number"
-                            maxLength={7}
-                            onFocus={(e) => {
-                              e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : "#006bb6"
-                              e.target.style.borderWidth = "2px"
-                            }}
-                            onBlur={(e) => {
-                              e.target.style.borderColor = errors.mobileNumber ? "#ef4444" : ""
-                              e.target.style.borderWidth = "2px"
-                            }}
-                          />
-                          {errors.mobileNumber && <p className="text-sm text-red-500">{errors.mobileNumber}</p>}
-                        </div>
-
+                      <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label htmlFor="contactNumber" className="text-sm font-medium text-gray-700">
                             Contact Number
@@ -662,7 +622,6 @@ export default function BillPayPage() {
                           firstName: "",
                           lastName: "",
                           email: "",
-                          mobileNumber: "",
                           contactNumber: "",
                           accountNumber: "",
                           amount: "",
@@ -708,6 +667,13 @@ export default function BillPayPage() {
                         <span className="font-medium text-gray-700">Email : </span>
                         <span className="text-gray-900">{formData.email}</span>
                       </div>
+                      {formData.contactNumber && (
+                        <div>
+                          <span className="font-medium text-gray-700">Contact Number : </span>
+                          <span className="text-gray-900">{formData.contactNumber}</span>
+                        </div>
+                      )}
+                      {/* </CHANGE> */}
                     </div>
                   </div>
 
