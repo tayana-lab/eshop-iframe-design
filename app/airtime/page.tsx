@@ -22,7 +22,6 @@ export default function AirtimePage() {
     email: "",
     contactNumber: "",
     mobileNumber: "",
-    rechargeType: "",
     amount: "",
     verificationCode: "",
     confirmed: false,
@@ -53,7 +52,6 @@ export default function AirtimePage() {
     } else if (formData.mobileNumber.length !== 7) {
       newErrors.mobileNumber = "Mobile number must be 7 digits"
     }
-    if (!formData.rechargeType) newErrors.rechargeType = "Please select a recharge type"
     if (!formData.amount) newErrors.amount = "Please select an amount"
     if (!formData.verificationCode.trim()) {
       newErrors.verificationCode = "Verification code is required"
@@ -99,7 +97,6 @@ export default function AirtimePage() {
       email: "",
       contactNumber: "",
       mobileNumber: "",
-      rechargeType: "",
       amount: "",
       verificationCode: "",
       confirmed: false,
@@ -413,50 +410,8 @@ export default function AirtimePage() {
 
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="rechargeType" className="text-sm font-medium text-gray-700">
-                            Recharge Type <span className="text-red-500">*</span>
-                          </Label>
-                          <Select
-                            value={formData.rechargeType}
-                            onValueChange={(value) => {
-                              setFormData({ ...formData, rechargeType: value })
-                              if (errors.rechargeType) setErrors({ ...errors, rechargeType: "" })
-                            }}
-                          >
-                            <SelectTrigger
-                              className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
-                              style={
-                                {
-                                  height: "56px",
-                                  paddingLeft: "1rem",
-                                  paddingRight: "1rem",
-                                  "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                                  borderColor: errors.rechargeType ? "#ef4444" : "#e5e7eb",
-                                } as React.CSSProperties
-                              }
-                              onFocus={(e) => {
-                                e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#006bb6"
-                                e.currentTarget.style.borderWidth = "2px"
-                              }}
-                              onBlur={(e) => {
-                                e.currentTarget.style.borderColor = errors.rechargeType ? "#ef4444" : "#e5e7eb"
-                                e.currentTarget.style.borderWidth = "2px"
-                              }}
-                            >
-                              <SelectValue placeholder="Select recharge type..." />
-                            </SelectTrigger>
-                            <SelectContent className="rounded-xl">
-                              <SelectItem value="credit" className="text-base">
-                                Credit
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {errors.rechargeType && <p className="text-sm text-red-500">{errors.rechargeType}</p>}
-                        </div>
-
-                        <div className="space-y-2">
                           <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
-                            Amount (SR) <span className="text-red-500">*</span>
+                            Credit Amount (SR) <span className="text-red-500">*</span>
                           </Label>
                           <Select
                             value={formData.amount}
@@ -627,7 +582,6 @@ export default function AirtimePage() {
                           email: "",
                           contactNumber: "",
                           mobileNumber: "",
-                          rechargeType: "",
                           amount: "",
                           verificationCode: "",
                           confirmed: false,
