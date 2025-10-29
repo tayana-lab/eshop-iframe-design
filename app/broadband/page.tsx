@@ -112,6 +112,32 @@ export default function BroadbandPage() {
     { id: "receipt" as Step, label: "Receipt" },
   ]
 
+  const getPackagePrice = (gigaBooster: string) => {
+    const prices: Record<string, number> = {
+      "10gb": 50.0,
+      "25gb": 100.0,
+      "50gb": 180.0,
+      "100gb": 300.0,
+      unlimited: 500.0,
+    }
+    return prices[gigaBooster] || 0
+  }
+
+  const getPackageName = (gigaBooster: string) => {
+    const names: Record<string, string> = {
+      "10gb": "GIGA 10GB",
+      "25gb": "GIGA 25GB",
+      "50gb": "GIGA 50GB",
+      "100gb": "GIGA 100GB",
+      unlimited: "GIGA Unlimited",
+    }
+    return names[gigaBooster] || ""
+  }
+
+  const calculateServiceCharge = (amount: number) => {
+    return (amount * 0.02).toFixed(2) // 2% service charge
+  }
+
   return (
     <div>
       <div className="bg-white border-b border-gray-200">
@@ -540,8 +566,6 @@ export default function BroadbandPage() {
                     </div>
                   </div>
 
-                 
-
                   <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                     <Button
                       type="button"
@@ -596,6 +620,12 @@ export default function BroadbandPage() {
                         <span className="font-medium text-gray-700">Email : </span>
                         <span className="text-gray-900">{formData.email}</span>
                       </div>
+                      {formData.contactNumber && (
+                        <div>
+                          <span className="font-medium text-gray-700">Contact Number : </span>
+                          <span className="text-gray-900">{formData.contactNumber}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -605,7 +635,7 @@ export default function BroadbandPage() {
                     </div>
                     <div className="space-y-4 px-6 py-4">
                       <div>
-                        <span className="font-medium text-gray-700">Username to be credited: </span>
+                        <span className="font-medium text-gray-700">Username: </span>
                         <span className="text-gray-900">{formData.username}</span>
                       </div>
                       <div>
@@ -616,6 +646,28 @@ export default function BroadbandPage() {
                           {formData.gigaBooster === "50gb" && "50 GB"}
                           {formData.gigaBooster === "100gb" && "100 GB"}
                           {formData.gigaBooster === "unlimited" && "Unlimited"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
+                      <p className="font-semibold text-gray-900">Purchase Details:</p>
+                    </div>
+                    <div className="space-y-3 px-6 py-4">
+                      <div>
+                        <span className="font-medium text-gray-700">Item : </span>
+                        <span className="text-gray-900">{getPackageName(formData.gigaBooster)}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Charge (SR): </span>
+                        <span className="text-gray-900">{getPackagePrice(formData.gigaBooster).toFixed(2)}</span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Service Charge (SR): </span>
+                        <span className="text-gray-900">
+                          ( {formData.paymentMethod === "visa" ? "Visa" : "Mastercard"}: SR 0.00)
                         </span>
                       </div>
                     </div>

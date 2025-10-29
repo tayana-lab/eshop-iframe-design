@@ -22,6 +22,7 @@ export default function MobileBoosterPage() {
     email: "",
     contactNumber: "",
     mobileNumber: "",
+    boosterCategory: "",
     boosterType: "",
     verificationCode: "",
     confirmed: false,
@@ -29,6 +30,27 @@ export default function MobileBoosterPage() {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const boosterOptions = {
+    text: [
+      { value: "text-100", label: "100 SMS" },
+      { value: "text-250", label: "250 SMS" },
+      { value: "text-500", label: "500 SMS" },
+      { value: "text-unlimited", label: "Unlimited SMS" },
+    ],
+    data: [
+      { value: "data-1gb", label: "1 GB Data" },
+      { value: "data-3gb", label: "3 GB Data" },
+      { value: "data-5gb", label: "5 GB Data" },
+      { value: "data-10gb", label: "10 GB Data" },
+    ],
+    international: [
+      { value: "intl-100min", label: "100 Minutes International" },
+      { value: "intl-250min", label: "250 Minutes International" },
+      { value: "intl-500min", label: "500 Minutes International" },
+      { value: "intl-unlimited", label: "Unlimited International" },
+    ],
+  }
 
   useEffect(() => {
     setGeneratedCode(Math.floor(100000 + Math.random() * 900000).toString())
@@ -52,6 +74,7 @@ export default function MobileBoosterPage() {
     } else if (formData.mobileNumber.length !== 7) {
       newErrors.mobileNumber = "Mobile number must be 7 digits"
     }
+    if (!formData.boosterCategory) newErrors.boosterCategory = "Please select a booster category"
     if (!formData.boosterType) newErrors.boosterType = "Please select a booster type"
     if (!formData.verificationCode.trim()) {
       newErrors.verificationCode = "Verification code is required"
@@ -97,6 +120,7 @@ export default function MobileBoosterPage() {
       email: "",
       contactNumber: "",
       mobileNumber: "",
+      boosterCategory: "",
       boosterType: "",
       verificationCode: "",
       confirmed: false,
@@ -409,13 +433,14 @@ export default function MobileBoosterPage() {
 
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="boosterType" className="text-sm font-medium text-gray-700">
+                          <Label htmlFor="boosterCategory" className="text-sm font-medium text-gray-700">
                             Select Booster <span className="text-red-500">*</span>
                           </Label>
                           <Select
-                            value={formData.boosterType}
+                            value={formData.boosterCategory}
                             onValueChange={(value) => {
-                              setFormData({ ...formData, boosterType: value })
+                              setFormData({ ...formData, boosterCategory: value, boosterType: "" })
+                              if (errors.boosterCategory) setErrors({ ...errors, boosterCategory: "" })
                               if (errors.boosterType) setErrors({ ...errors, boosterType: "" })
                             }}
                           >
@@ -427,31 +452,90 @@ export default function MobileBoosterPage() {
                                   paddingLeft: "1rem",
                                   paddingRight: "1rem",
                                   "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
-                                  borderColor: errors.boosterType ? "#ef4444" : "#e5e7eb",
+                                  borderColor: errors.boosterCategory ? "#ef4444" : "#e5e7eb",
                                 } as React.CSSProperties
                               }
                               onFocus={(e) => {
-                                e.currentTarget.style.borderColor = errors.boosterType ? "#ef4444" : "#006bb6"
+                                e.currentTarget.style.borderColor = errors.boosterCategory ? "#ef4444" : "#006bb6"
                                 e.currentTarget.style.borderWidth = "2px"
                               }}
                               onBlur={(e) => {
-                                e.currentTarget.style.borderColor = errors.boosterType ? "#ef4444" : "#e5e7eb"
+                                e.currentTarget.style.borderColor = errors.boosterCategory ? "#ef4444" : "#e5e7eb"
                                 e.currentTarget.style.borderWidth = "2px"
                               }}
                             >
-                              <SelectValue placeholder="Select booster type..." />
+                              <SelectValue placeholder="Select Type" />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl">
-                              <SelectItem value="data" className="text-base">
-                                Data Booster
+                              <SelectItem value="text" className="text-base">
+                                Text
                               </SelectItem>
-                              <SelectItem value="voice" className="text-base">
-                                Voice Booster
+                              <SelectItem value="data" className="text-base">
+                                Data
+                              </SelectItem>
+                              <SelectItem value="international" className="text-base">
+                                International Voice
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                          {errors.boosterType && <p className="text-sm text-red-500">{errors.boosterType}</p>}
+                          {errors.boosterCategory && <p className="text-sm text-red-500">{errors.boosterCategory}</p>}
                         </div>
+
+                        {formData.boosterCategory && (
+                          <div className="space-y-2">
+                            <Select
+                              value={formData.boosterType}
+                              onValueChange={(value) => {
+                                setFormData({ ...formData, boosterType: value })
+                                if (errors.boosterType) setErrors({ ...errors, boosterType: "" })
+                              }}
+                            >
+                              <SelectTrigger
+                                className="w-full rounded-xl border-2 border-gray-200 bg-white text-base transition-all focus:ring-[3px]"
+                                style={
+                                  {
+                                    height: "56px",
+                                    paddingLeft: "1rem",
+                                    paddingRight: "1rem",
+                                    "--tw-ring-color": "rgba(0, 107, 182, 0.25)",
+                                    borderColor: errors.boosterType ? "#ef4444" : "#e5e7eb",
+                                  } as React.CSSProperties
+                                }
+                                onFocus={(e) => {
+                                  e.currentTarget.style.borderColor = errors.boosterType ? "#ef4444" : "#006bb6"
+                                  e.currentTarget.style.borderWidth = "2px"
+                                }}
+                                onBlur={(e) => {
+                                  e.currentTarget.style.borderColor = errors.boosterType ? "#ef4444" : "#e5e7eb"
+                                  e.currentTarget.style.borderWidth = "2px"
+                                }}
+                              >
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                              <SelectContent className="rounded-xl">
+                                {formData.boosterCategory === "text" &&
+                                  boosterOptions.text.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-base">
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                {formData.boosterCategory === "data" &&
+                                  boosterOptions.data.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-base">
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                {formData.boosterCategory === "international" &&
+                                  boosterOptions.international.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-base">
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            {errors.boosterType && <p className="text-sm text-red-500">{errors.boosterType}</p>}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -469,14 +553,14 @@ export default function MobileBoosterPage() {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
-                                               <div
-                          className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
-                          style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
-                        >
                           <div
-                            className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
-                            style={{ color: "#006bb6" }}
+                            className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
+                            style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
                           >
+                            <div
+                              className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
+                              style={{ color: "#006bb6" }}
+                            >
                               {generatedCode.split("").map((digit, i) => (
                                 <span key={i}>{digit}</span>
                               ))}
@@ -543,6 +627,7 @@ export default function MobileBoosterPage() {
                           email: "",
                           contactNumber: "",
                           mobileNumber: "",
+                          boosterCategory: "",
                           boosterType: "",
                           verificationCode: "",
                           confirmed: false,
@@ -586,6 +671,12 @@ export default function MobileBoosterPage() {
                         <span className="font-medium text-gray-700">Email : </span>
                         <span className="text-gray-900">{formData.email}</span>
                       </div>
+                      {formData.contactNumber && (
+                        <div>
+                          <span className="font-medium text-gray-700">Contact Number : </span>
+                          <span className="text-gray-900">{formData.contactNumber}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -601,8 +692,14 @@ export default function MobileBoosterPage() {
                       <div>
                         <span className="font-medium text-gray-700">Service Type: </span>
                         <span className="text-gray-900">
-                          {formData.boosterType === "data" && "Data Booster"}
-                          {formData.boosterType === "voice" && "Voice Booster"}
+                          {formData.boosterCategory === "text" && "Text Booster - "}
+                          {formData.boosterCategory === "data" && "Data Booster - "}
+                          {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.label
+                          }
                         </span>
                       </div>
                     </div>
@@ -662,8 +759,14 @@ export default function MobileBoosterPage() {
                       <div>
                         <span className="font-medium text-gray-700">Service : </span>
                         <span className="text-gray-900">
-                          {formData.boosterType === "data" && "Data Booster"}
-                          {formData.boosterType === "voice" && "Voice Booster"}
+                          {formData.boosterCategory === "text" && "Text Booster - "}
+                          {formData.boosterCategory === "data" && "Data Booster - "}
+                          {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.label
+                          }
                         </span>
                       </div>
                     </div>
@@ -777,8 +880,14 @@ export default function MobileBoosterPage() {
                       <div className="flex justify-between border-b border-gray-100 pb-3">
                         <span className="font-medium text-gray-600">Service</span>
                         <span className="font-semibold text-gray-900">
-                          {formData.boosterType === "data" && "Data Booster"}
-                          {formData.boosterType === "voice" && "Voice Booster"}
+                          {formData.boosterCategory === "text" && "Text Booster - "}
+                          {formData.boosterCategory === "data" && "Data Booster - "}
+                          {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.label
+                          }
                         </span>
                       </div>
                       <div className="flex justify-between">
