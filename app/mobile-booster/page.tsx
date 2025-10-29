@@ -50,6 +50,20 @@ export default function MobileBoosterPage() {
       { value: "intl-500min", label: "500 Minutes International" },
       { value: "intl-unlimited", label: "Unlimited International" },
     ],
+    voice: [
+      { value: "local-talktime-100", label: "Local Talktime 100 Minutes" },
+      { value: "local-talktime-250", label: "Local Talktime 250 Minutes" },
+      { value: "local-talktime-500", label: "Local Talktime 500 Minutes" },
+      { value: "local-talktime-unlimited", label: "Local Talktime Unlimited" },
+    ],
+    // Added jumbo category with Jumbo Booster options
+    jumbo: [
+      { value: "jumbo-basic", label: "Jumbo Booster Basic" },
+      { value: "jumbo-standard", label: "Jumbo Booster Standard" },
+      { value: "jumbo-premium", label: "Jumbo Booster Premium" },
+      { value: "jumbo-ultimate", label: "Jumbo Booster Ultimate" },
+    ],
+    // </CHANGE>
   }
 
   useEffect(() => {
@@ -473,9 +487,16 @@ export default function MobileBoosterPage() {
                               <SelectItem value="data" className="text-base">
                                 Data
                               </SelectItem>
+                               <SelectItem value="voice" className="text-base">
+                                Voice
+                              </SelectItem>
                               <SelectItem value="international" className="text-base">
                                 International Voice
                               </SelectItem>
+                              <SelectItem value="jumbo" className="text-base">
+                                Jumbo Booster
+                              </SelectItem>
+                              {/* </CHANGE> */}
                             </SelectContent>
                           </Select>
                           {errors.boosterCategory && <p className="text-sm text-red-500">{errors.boosterCategory}</p>}
@@ -531,6 +552,19 @@ export default function MobileBoosterPage() {
                                       {option.label}
                                     </SelectItem>
                                   ))}
+                                {formData.boosterCategory === "voice" &&
+                                  boosterOptions.voice.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-base">
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                {formData.boosterCategory === "jumbo" &&
+                                  boosterOptions.jumbo.map((option) => (
+                                    <SelectItem key={option.value} value={option.value} className="text-base">
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                {/* </CHANGE> */}
                               </SelectContent>
                             </Select>
                             {errors.boosterType && <p className="text-sm text-red-500">{errors.boosterType}</p>}
@@ -695,6 +729,9 @@ export default function MobileBoosterPage() {
                           {formData.boosterCategory === "text" && "Text Booster - "}
                           {formData.boosterCategory === "data" && "Data Booster - "}
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {formData.boosterCategory === "voice" && "Voice Booster - "}
+                          {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
+                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,
@@ -762,6 +799,9 @@ export default function MobileBoosterPage() {
                           {formData.boosterCategory === "text" && "Text Booster - "}
                           {formData.boosterCategory === "data" && "Data Booster - "}
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {formData.boosterCategory === "voice" && "Voice Booster - "}
+                          {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
+                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,
@@ -883,6 +923,9 @@ export default function MobileBoosterPage() {
                           {formData.boosterCategory === "text" && "Text Booster - "}
                           {formData.boosterCategory === "data" && "Data Booster - "}
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
+                          {formData.boosterCategory === "voice" && "Voice Booster - "}
+                          {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
+                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,

@@ -449,12 +449,6 @@ export default function AirtimePage() {
                               <SelectItem value="credit" className="text-base">
                                 Credit
                               </SelectItem>
-                              <SelectItem value="local-talktime" className="text-base">
-                                Local Talktime
-                              </SelectItem>
-                              <SelectItem value="jumbo-booster" className="text-base">
-                                Jumbo Booster
-                              </SelectItem>
                             </SelectContent>
                           </Select>
                           {errors.rechargeType && <p className="text-sm text-red-500">{errors.rechargeType}</p>}
@@ -681,7 +675,6 @@ export default function AirtimePage() {
                           <span className="text-gray-900">{formData.contactNumber}</span>
                         </div>
                       )}
-                      {/* </CHANGE> */}
                     </div>
                   </div>
 
@@ -696,11 +689,7 @@ export default function AirtimePage() {
                       </div>
                       <div>
                         <span className="font-medium text-gray-700">Service Type: </span>
-                        <span className="text-gray-900">
-                          {formData.rechargeType === "credit" && "Credit"}
-                          {formData.rechargeType === "local-talktime" && "Local Talktime"}
-                          {formData.rechargeType === "jumbo-booster" && "Jumbo Booster"}
-                        </span>
+                        <span className="text-gray-900">Credit</span>
                       </div>
                     </div>
                   </div>
