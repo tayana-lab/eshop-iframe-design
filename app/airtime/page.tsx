@@ -456,7 +456,7 @@ export default function AirtimePage() {
 
                         <div className="space-y-2">
                           <Label htmlFor="amount" className="text-sm font-medium text-gray-700">
-                            Amount (SCR) <span className="text-red-500">*</span>
+                            Amount (SR) <span className="text-red-500">*</span>
                           </Label>
                           <Select
                             value={formData.amount}
@@ -489,25 +489,25 @@ export default function AirtimePage() {
                             </SelectTrigger>
                             <SelectContent className="rounded-xl">
                               <SelectItem value="50" className="text-base">
-                                SCR 50
+                                SR 50
                               </SelectItem>
                               <SelectItem value="100" className="text-base">
-                                SCR 100
+                                SR 100
                               </SelectItem>
                               <SelectItem value="250" className="text-base">
-                                SCR 250
+                                SR 250
                               </SelectItem>
                               <SelectItem value="500" className="text-base">
-                                SCR 500
+                                SR 500
                               </SelectItem>
                               <SelectItem value="1000" className="text-base">
-                                SCR 1000
+                                SR 1000
                               </SelectItem>
                               <SelectItem value="1569" className="text-base">
-                                SCR 1569
+                                SR 1569
                               </SelectItem>
                               <SelectItem value="2000" className="text-base">
-                                SCR 2000
+                                SR 2000
                               </SelectItem>
                             </SelectContent>
                           </Select>
@@ -528,7 +528,9 @@ export default function AirtimePage() {
                               </div>
                               <div>
                                 <p className="text-sm font-medium text-gray-700">Selected Plan</p>
-                                <p className="text-base font-bold text-gray-900">SCR {formData.amount}</p>
+                                <p className="text-base font-bold text-gray-900">
+                                  SR {formData.amount} of Prepaid Credit
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -701,7 +703,7 @@ export default function AirtimePage() {
                     <div className="space-y-4 px-6 py-4">
                       <div>
                         <span className="font-medium text-gray-700">Item : </span>
-                        <span className="text-gray-900">SR{formData.amount}</span>
+                        <span className="text-gray-900">SR {formData.amount} of Prepaid Credit</span>
                       </div>
                       <div>
                         <span className="font-medium text-gray-700">Charge (SR): </span>
@@ -763,7 +765,7 @@ export default function AirtimePage() {
                       </div>
                       <div>
                         <span className="font-medium text-gray-700">Item : </span>
-                        <span className="text-gray-900">Credit SR{formData.amount}</span>
+                        <span className="text-gray-900">Credit SR {formData.amount} of Prepaid Credit</span>
                       </div>
                     </div>
                   </div>
