@@ -134,10 +134,6 @@ export default function BroadbandPage() {
     return names[gigaBooster] || ""
   }
 
-  const calculateServiceCharge = (amount: number) => {
-    return (amount * 0.02).toFixed(2) // 2% service charge
-  }
-
   return (
     <div>
       <div className="bg-white border-b border-gray-200">
@@ -191,9 +187,10 @@ export default function BroadbandPage() {
             </div>
           </div>
 
-          <div className="mb-6 sm:mb-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <div className="flex items-center justify-between">
+          {/* START: Improved stepper responsiveness - hide labels on very small screens */}
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+              <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6">
                 {steps.map((step, index) => {
                   const getStepIndex = (step: Step) => steps.findIndex((s) => s.id === step)
                   const currentStepIndex = getStepIndex(currentStep)
@@ -202,11 +199,10 @@ export default function BroadbandPage() {
                   const isLast = index === steps.length - 1
 
                   return (
-                    <div key={step.id} className="flex items-center flex-1">
-                      {/* Step Circle and Label */}
-                      <div className="flex items-center gap-2 sm:gap-3">
+                    <div key={step.id} className="flex items-center">
+                      <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
                         <div
-                          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm sm:text-base font-semibold transition-all ${
+                          className={`flex h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 items-center justify-center rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all ${
                             isCurrent
                               ? "bg-blue-600 text-white"
                               : isCompleted
@@ -218,7 +214,7 @@ export default function BroadbandPage() {
                           {index + 1}
                         </div>
                         <span
-                          className={`text-sm sm:text-base font-medium whitespace-nowrap ${
+                          className={`hidden sm:inline text-xs sm:text-sm md:text-base font-medium ${
                             isCurrent ? "text-blue-600" : isCompleted ? "text-gray-900" : "text-gray-400"
                           }`}
                           style={isCurrent ? { color: "#006bb6" } : {}}
@@ -227,10 +223,9 @@ export default function BroadbandPage() {
                         </span>
                       </div>
 
-                      {/* Connector Line */}
                       {!isLast && (
-                        <div className="flex-1 mx-2 sm:mx-4">
-                          <div className="h-0.5 w-full bg-gray-200" />
+                        <div className="mx-1 sm:mx-2 md:mx-4">
+                          <div className="h-0.5 w-8 sm:w-12 md:w-16 bg-gray-200" />
                         </div>
                       )}
                     </div>
@@ -239,21 +234,24 @@ export default function BroadbandPage() {
               </div>
             </div>
           </div>
+          {/* END: Improved stepper responsiveness - hide labels on very small screens */}
 
           <div className="overflow-hidden rounded-2xl sm:rounded-3xl bg-white shadow-lg">
             <div className="p-3 sm:p-4 md:p-6 lg:p-8">
               {currentStep === "customer" && (
                 <div className="space-y-6">
                   <div>
-                    <div className="mb-4 flex items-center gap-3">
+                    {/* START: Improved section headers */}
+                    <div className="mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                       <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-base sm:text-lg font-bold text-white"
                         style={{ backgroundColor: "#006bb6" }}
                       >
                         1
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
+                      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Personal Details</h2>
                     </div>
+                    {/* END: Improved section headers */}
 
                     <div className="space-y-4">
                       <div className="grid gap-4 md:grid-cols-3">
@@ -422,6 +420,7 @@ export default function BroadbandPage() {
 
                   <div className="grid gap-6 lg:grid-cols-2">
                     <div>
+                      {/* START: Improved section headers */}
                       <div className="mb-4 flex items-center gap-3">
                         <div
                           className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
@@ -431,6 +430,7 @@ export default function BroadbandPage() {
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
                       </div>
+                      {/* END: Improved section headers */}
 
                       <div className="space-y-4">
                         <div className="space-y-2">
@@ -490,6 +490,7 @@ export default function BroadbandPage() {
                     </div>
 
                     <div>
+                      {/* START: Improved section headers */}
                       <div className="mb-4 flex items-center gap-3">
                         <div
                           className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
@@ -499,16 +500,18 @@ export default function BroadbandPage() {
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
                       </div>
+                      {/* END: Improved section headers */}
 
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
+                          {/* START: Improved verification code display */}
                           <div
-                            className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
+                            className="flex items-center justify-center gap-2 sm:gap-4 rounded-xl p-3 sm:p-4 md:p-6"
                             style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
                           >
                             <div
-                              className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
+                              className="flex gap-0.5 sm:gap-1 md:gap-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider"
                               style={{ color: "#006bb6" }}
                             >
                               {generatedCode.split("").map((digit, i) => (
@@ -518,13 +521,14 @@ export default function BroadbandPage() {
                             <button
                               type="button"
                               onClick={handleRefreshCode}
-                              className="rounded-lg p-2 transition-colors hover:bg-white hover:bg-opacity-50"
+                              className="rounded-lg p-1.5 sm:p-2 transition-colors hover:bg-white hover:bg-opacity-50"
                               style={{ color: "#006bb6" }}
                               aria-label="Refresh verification code"
                             >
                               <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                           </div>
+                          {/* END: Improved verification code display */}
                           <p className="text-center text-sm" style={{ color: "#006bb6" }}>
                             Enter the code below to verify
                           </p>
@@ -566,6 +570,7 @@ export default function BroadbandPage() {
                     </div>
                   </div>
 
+                  {/* START: Improved button heights for mobile */}
                   <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                     <Button
                       type="button"
@@ -584,13 +589,13 @@ export default function BroadbandPage() {
                         })
                         setErrors({})
                       }}
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-11 sm:h-12 md:h-14 rounded-xl border-2 border-gray-200 px-4 sm:px-6 md:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Reset
                     </Button>
                     <Button
                       onClick={handleNext}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
+                      className="h-11 sm:h-12 md:h-14 rounded-xl px-4 sm:px-6 md:px-8 text-sm sm:text-base font-semibold text-white shadow-lg"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -599,6 +604,7 @@ export default function BroadbandPage() {
                       Proceed to Confirm
                     </Button>
                   </div>
+                  {/* END: Improved button heights for mobile */}
                 </div>
               )}
 
@@ -661,14 +667,8 @@ export default function BroadbandPage() {
                         <span className="text-gray-900">{getPackageName(formData.gigaBooster)}</span>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">Charge (SR): </span>
+                        <span className="font-medium text-gray-700">Charge (SCR): </span>
                         <span className="text-gray-900">{getPackagePrice(formData.gigaBooster).toFixed(2)}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-700">Service Charge (SR): </span>
-                        <span className="text-gray-900">
-                          ( {formData.paymentMethod === "visa" ? "Visa" : "Mastercard"}: SR 0.00)
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -746,6 +746,10 @@ export default function BroadbandPage() {
                         <span className="font-medium text-gray-700">Target Username: </span>
                         <span className="text-gray-900">{formData.username}</span>
                       </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Transaction Amount (SCR): </span>
+                        <span className="text-gray-900">{getPackagePrice(formData.gigaBooster).toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
 
@@ -813,28 +817,35 @@ export default function BroadbandPage() {
                     <p className="mt-2 text-lg text-gray-600">Your transaction has been completed</p>
                   </div>
 
-                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-8 text-left">
-                    <h3 className="mb-6 text-xl font-bold text-gray-900">Transaction Receipt</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Transaction ID</span>
-                        <span className="font-mono font-semibold text-gray-900">
+                  {/* START: Improved receipt display for mobile */}
+                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-4 sm:p-6 md:p-8 text-left">
+                    <h3 className="mb-4 sm:mb-6 text-base sm:text-lg md:text-xl font-bold text-gray-900">
+                      Transaction Receipt
+                    </h3>
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">
+                          Transaction ID
+                        </span>
+                        <span className="font-mono font-semibold text-gray-900 text-xs sm:text-sm md:text-base break-all">
                           {Math.random().toString(36).substr(2, 9).toUpperCase()}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Customer</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Customer</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {formData.firstName} {formData.lastName}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Username</span>
-                        <span className="font-semibold text-gray-900">{formData.username}</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Username</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
+                          {formData.username}
+                        </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Service</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Service</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {formData.gigaBooster === "10gb" && "10 GB"}
                           {formData.gigaBooster === "25gb" && "25 GB"}
                           {formData.gigaBooster === "50gb" && "50 GB"}
@@ -842,18 +853,21 @@ export default function BroadbandPage() {
                           {formData.gigaBooster === "unlimited" && "Unlimited"}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Payment Method</span>
-                        <span className="font-semibold text-gray-900">Visa Card</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">
+                          Payment Method
+                        </span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">Visa Card</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-600">Date & Time</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Date & Time</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}
                         </span>
                       </div>
                     </div>
                   </div>
+                  {/* END: Improved receipt display for mobile */}
 
                   <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <Button

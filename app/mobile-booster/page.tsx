@@ -33,37 +33,40 @@ export default function MobileBoosterPage() {
 
   const boosterOptions = {
     text: [
-      { value: "text-100", label: "100 SMS" },
-      { value: "text-250", label: "250 SMS" },
-      { value: "text-500", label: "500 SMS" },
-      { value: "text-unlimited", label: "Unlimited SMS" },
+      { value: "text-100", label: "100 SMS", price: 15, validity: "Valid for 7 days" },
+      { value: "text-250", label: "250 SMS", price: 30, validity: "Valid for 14 days" },
+      { value: "text-500", label: "500 SMS", price: 50, validity: "Valid for 30 days" },
+      { value: "text-unlimited", label: "Unlimited SMS", price: 100, validity: "Valid for 30 days" },
     ],
     data: [
-      { value: "data-1gb", label: "1 GB Data" },
-      { value: "data-3gb", label: "3 GB Data" },
-      { value: "data-5gb", label: "5 GB Data" },
-      { value: "data-10gb", label: "10 GB Data" },
+      { value: "data-1gb", label: "1 GB Data", price: 25, validity: "Valid for 7 days" },
+      { value: "data-3gb", label: "3 GB Data", price: 60, validity: "Valid for 14 days" },
+      { value: "data-5gb", label: "5 GB Data", price: 90, validity: "Valid for 30 days" },
+      { value: "data-10gb", label: "10 GB Data", price: 150, validity: "Valid for 30 days" },
     ],
     international: [
-      { value: "intl-100min", label: "100 Minutes International" },
-      { value: "intl-250min", label: "250 Minutes International" },
-      { value: "intl-500min", label: "500 Minutes International" },
-      { value: "intl-unlimited", label: "Unlimited International" },
+      { value: "intl-100min", label: "100 Minutes International", price: 40, validity: "Valid for 7 days" },
+      { value: "intl-250min", label: "250 Minutes International", price: 85, validity: "Valid for 14 days" },
+      { value: "intl-500min", label: "500 Minutes International", price: 150, validity: "Valid for 30 days" },
+      { value: "intl-unlimited", label: "Unlimited International", price: 300, validity: "Valid for 30 days" },
     ],
     voice: [
-      { value: "local-talktime-100", label: "Local Talktime 100 Minutes" },
-      { value: "local-talktime-250", label: "Local Talktime 250 Minutes" },
-      { value: "local-talktime-500", label: "Local Talktime 500 Minutes" },
-      { value: "local-talktime-unlimited", label: "Local Talktime Unlimited" },
+      { value: "local-talktime-100", label: "Local Talktime 100 Minutes", price: 20, validity: "Valid for 7 days" },
+      { value: "local-talktime-250", label: "Local Talktime 250 Minutes", price: 45, validity: "Valid for 14 days" },
+      { value: "local-talktime-500", label: "Local Talktime 500 Minutes", price: 80, validity: "Valid for 30 days" },
+      {
+        value: "local-talktime-unlimited",
+        label: "Local Talktime Unlimited",
+        price: 150,
+        validity: "Valid for 30 days",
+      },
     ],
-    // Added jumbo category with Jumbo Booster options
     jumbo: [
-      { value: "jumbo-basic", label: "Jumbo Booster Basic" },
-      { value: "jumbo-standard", label: "Jumbo Booster Standard" },
-      { value: "jumbo-premium", label: "Jumbo Booster Premium" },
-      { value: "jumbo-ultimate", label: "Jumbo Booster Ultimate" },
+      { value: "jumbo-basic", label: "Jumbo Booster Basic", price: 100, validity: "Valid for 30 days" },
+      { value: "jumbo-standard", label: "Jumbo Booster Standard", price: 200, validity: "Valid for 30 days" },
+      { value: "jumbo-premium", label: "Jumbo Booster Premium", price: 350, validity: "Valid for 30 days" },
+      { value: "jumbo-ultimate", label: "Jumbo Booster Ultimate", price: 500, validity: "Valid for 30 days" },
     ],
-    // </CHANGE>
   }
 
   useEffect(() => {
@@ -204,20 +207,20 @@ export default function MobileBoosterPage() {
             </div>
           </div>
 
-          <div className="mb-6 sm:mb-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <div className="flex items-center justify-between">
+          {/* Improved stepper responsiveness - hide labels on very small screens */}
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-3 sm:p-4 md:p-6">
+              <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6">
                 {steps.map((step, index) => {
                   const isCompleted = index < currentStepIndex
                   const isCurrent = index === currentStepIndex
                   const isLast = index === steps.length - 1
 
                   return (
-                    <div key={step.id} className="flex items-center flex-1">
-                      {/* Step Circle and Label */}
-                      <div className="flex items-center gap-2 sm:gap-3">
+                    <div key={step.id} className="flex items-center">
+                      <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
                         <div
-                          className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm sm:text-base font-semibold transition-all ${
+                          className={`flex h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 items-center justify-center rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all ${
                             isCurrent
                               ? "bg-blue-600 text-white"
                               : isCompleted
@@ -229,7 +232,7 @@ export default function MobileBoosterPage() {
                           {index + 1}
                         </div>
                         <span
-                          className={`text-sm sm:text-base font-medium whitespace-nowrap ${
+                          className={`hidden sm:inline text-xs sm:text-sm md:text-base font-medium ${
                             isCurrent ? "text-blue-600" : isCompleted ? "text-gray-900" : "text-gray-400"
                           }`}
                           style={isCurrent ? { color: "#006bb6" } : {}}
@@ -238,10 +241,9 @@ export default function MobileBoosterPage() {
                         </span>
                       </div>
 
-                      {/* Connector Line */}
                       {!isLast && (
-                        <div className="flex-1 mx-2 sm:mx-4">
-                          <div className="h-0.5 w-full bg-gray-200" />
+                        <div className="mx-1 sm:mx-2 md:mx-4">
+                          <div className="h-0.5 w-8 sm:w-12 md:w-16 bg-gray-200" />
                         </div>
                       )}
                     </div>
@@ -256,14 +258,15 @@ export default function MobileBoosterPage() {
               {currentStep === "customer" && (
                 <div className="space-y-6">
                   <div>
-                    <div className="mb-4 flex items-center gap-3">
+                    {/* Improved section headers and verification code display */}
+                    <div className="mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3">
                       <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold text-white"
+                        className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full text-base sm:text-lg font-bold text-white"
                         style={{ backgroundColor: "#006bb6" }}
                       >
                         1
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">Personal Details</h2>
+                      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Personal Details</h2>
                     </div>
 
                     <div className="space-y-4">
@@ -487,7 +490,7 @@ export default function MobileBoosterPage() {
                               <SelectItem value="data" className="text-base">
                                 Data
                               </SelectItem>
-                               <SelectItem value="voice" className="text-base">
+                              <SelectItem value="voice" className="text-base">
                                 Voice
                               </SelectItem>
                               <SelectItem value="international" className="text-base">
@@ -496,7 +499,6 @@ export default function MobileBoosterPage() {
                               <SelectItem value="jumbo" className="text-base">
                                 Jumbo Booster
                               </SelectItem>
-                              {/* </CHANGE> */}
                             </SelectContent>
                           </Select>
                           {errors.boosterCategory && <p className="text-sm text-red-500">{errors.boosterCategory}</p>}
@@ -564,10 +566,32 @@ export default function MobileBoosterPage() {
                                       {option.label}
                                     </SelectItem>
                                   ))}
-                                {/* </CHANGE> */}
                               </SelectContent>
                             </Select>
                             {errors.boosterType && <p className="text-sm text-red-500">{errors.boosterType}</p>}
+
+                            {formData.boosterType &&
+                              (() => {
+                                const selectedBooster = boosterOptions[
+                                  formData.boosterCategory as keyof typeof boosterOptions
+                                ]?.find((opt) => opt.value === formData.boosterType)
+                                return selectedBooster ? (
+                                  <div
+                                    className="mt-3 space-y-2 rounded-xl p-4"
+                                    style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
+                                  >
+                                    <div className="text-base text-gray-700">
+                                      <span className="font-medium">Charge (SCR): </span>
+                                      <span className="font-semibold" style={{ color: "#006bb6" }}>
+                                        {selectedBooster.price}.00
+                                      </span>
+                                    </div>
+                                    <div className="text-base text-gray-700">
+                                      <span className="font-medium">{selectedBooster.validity}</span>
+                                    </div>
+                                  </div>
+                                ) : null
+                              })()}
                           </div>
                         )}
                       </div>
@@ -587,12 +611,13 @@ export default function MobileBoosterPage() {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label className="text-sm font-medium text-gray-700">Verification Code</Label>
+                          {/* Improved section headers and verification code display */}
                           <div
-                            className="flex items-center justify-center gap-4 rounded-xl p-4 sm:p-6"
+                            className="flex items-center justify-center gap-2 sm:gap-4 rounded-xl p-3 sm:p-4 md:p-6"
                             style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}
                           >
                             <div
-                              className="flex gap-1 sm:gap-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-wider"
+                              className="flex gap-0.5 sm:gap-1 md:gap-2 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold tracking-wider"
                               style={{ color: "#006bb6" }}
                             >
                               {generatedCode.split("").map((digit, i) => (
@@ -602,11 +627,11 @@ export default function MobileBoosterPage() {
                             <button
                               type="button"
                               onClick={handleRefreshCode}
-                              className="rounded-lg p-2 transition-colors hover:bg-white hover:bg-opacity-50"
+                              className="rounded-lg p-1.5 sm:p-2 transition-colors hover:bg-white hover:bg-opacity-50"
                               style={{ color: "#006bb6" }}
                               aria-label="Refresh verification code"
                             >
-                              <RefreshCw className="h-5 w-5" />
+                              <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
                             </button>
                           </div>
                           <p className="text-center text-sm" style={{ color: "#006bb6" }}>
@@ -650,6 +675,7 @@ export default function MobileBoosterPage() {
                     </div>
                   </div>
 
+                  {/* Improved button heights for mobile */}
                   <div className="flex flex-col gap-4 border-t border-gray-100 pt-6 sm:flex-row sm:justify-end">
                     <Button
                       type="button"
@@ -669,13 +695,13 @@ export default function MobileBoosterPage() {
                         })
                         setErrors({})
                       }}
-                      className="h-14 rounded-xl border-2 border-gray-200 px-8 text-base font-semibold bg-transparent"
+                      className="h-11 sm:h-12 md:h-14 rounded-xl border-2 border-gray-200 px-4 sm:px-6 md:px-8 text-sm sm:text-base font-semibold bg-transparent"
                     >
                       Reset
                     </Button>
                     <Button
                       onClick={handleNext}
-                      className="h-14 rounded-xl px-8 text-base font-semibold text-white shadow-lg"
+                      className="h-11 sm:h-12 md:h-14 rounded-xl px-4 sm:px-6 md:px-8 text-sm sm:text-base font-semibold text-white shadow-lg"
                       style={{
                         backgroundColor: "#006bb6",
                         boxShadow: "0 10px 15px -3px rgba(0, 107, 182, 0.3)",
@@ -731,7 +757,6 @@ export default function MobileBoosterPage() {
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
                           {formData.boosterCategory === "voice" && "Voice Booster - "}
                           {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
-                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,
@@ -801,7 +826,6 @@ export default function MobileBoosterPage() {
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
                           {formData.boosterCategory === "voice" && "Voice Booster - "}
                           {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
-                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,
@@ -820,6 +844,18 @@ export default function MobileBoosterPage() {
                       <div>
                         <span className="font-medium text-gray-700">Target Number: </span>
                         <span className="text-gray-900">{formData.mobileNumber}</span>
+                      </div>
+                      {/* CHANGE: Added payment amount display */}
+                      <div>
+                        <span className="font-medium text-gray-700">Transaction Amount (SCR): </span>
+                        <span className="text-gray-900">
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.price
+                          }
+                          .00
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -898,34 +934,40 @@ export default function MobileBoosterPage() {
                     <p className="mt-2 text-lg text-gray-600">Your transaction has been completed</p>
                   </div>
 
-                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-8 text-left">
-                    <h3 className="mb-6 text-xl font-bold text-gray-900">Transaction Receipt</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Transaction ID</span>
-                        <span className="font-mono font-semibold text-gray-900">
+                  {/* Improved receipt display for mobile */}
+                  <div className="mx-auto max-w-2xl rounded-xl border border-gray-200 p-4 sm:p-6 md:p-8 text-left">
+                    <h3 className="mb-4 sm:mb-6 text-base sm:text-lg md:text-xl font-bold text-gray-900">
+                      Transaction Receipt
+                    </h3>
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">
+                          Transaction ID
+                        </span>
+                        <span className="font-mono font-semibold text-gray-900 text-xs sm:text-sm md:text-base break-all">
                           {Math.random().toString(36).substr(2, 9).toUpperCase()}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Customer</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Customer</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {formData.firstName} {formData.lastName}
                         </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Mobile Number</span>
-                        <span className="font-semibold text-gray-900">{formData.mobileNumber}</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Mobile Number</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
+                          {formData.mobileNumber}
+                        </span>
                       </div>
-                      <div className="flex justify-between border-b border-gray-100 pb-3">
-                        <span className="font-medium text-gray-600">Service</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Service</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {formData.boosterCategory === "text" && "Text Booster - "}
                           {formData.boosterCategory === "data" && "Data Booster - "}
                           {formData.boosterCategory === "international" && "International Voice Booster - "}
                           {formData.boosterCategory === "voice" && "Voice Booster - "}
                           {formData.boosterCategory === "jumbo" && "Jumbo Booster - "}
-                          {/* </CHANGE> */}
                           {
                             boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
                               (opt) => opt.value === formData.boosterType,
@@ -933,13 +975,15 @@ export default function MobileBoosterPage() {
                           }
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-600">Payment Method</span>
-                        <span className="font-semibold text-gray-900">Visa Card</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">
+                          Payment Method
+                        </span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">Visa Card</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="font-medium text-gray-600">Date & Time</span>
-                        <span className="font-semibold text-gray-900">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                        <span className="font-medium text-gray-600 text-xs sm:text-sm md:text-base">Date & Time</span>
+                        <span className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base">
                           {new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}
                         </span>
                       </div>
