@@ -880,13 +880,12 @@ export default function BillPayPage() {
                     </div>
                   </div>
 
+                  {/* CHANGE: Adding Note section with gray-700 color and italic style */}
                   <div className="rounded-xl p-6" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
                     <p className="mb-3 font-semibold text-gray-900">Note:</p>
-                    <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700">
+                    <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700 italic">
                       <li>Please ensure that the details you have provided above are correct before proceeding.</li>
-                      <li className="text-red-600">
-                        *Not allowed - This item is not allowed through this Payment Gateway.
-                      </li>
+                      <li>*Not allowed - This item is not allowed through this Payment Gateway.</li>
                     </ol>
                   </div>
 
