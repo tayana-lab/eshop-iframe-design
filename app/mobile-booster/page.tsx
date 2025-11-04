@@ -445,7 +445,7 @@ export default function MobileBoosterPage() {
                         >
                           2
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
+                        <h2 className="text-2xl font-bold text-gray-900">Booster Selection</h2>
                       </div>
 
                       <div className="space-y-4">
@@ -767,6 +767,44 @@ export default function MobileBoosterPage() {
                     </div>
                   </div>
 
+                  <div>
+                    <div className="mb-4 rounded-t-xl px-6 py-3" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
+                      <p className="font-semibold text-gray-900">Purchase Details:</p>
+                    </div>
+                    <div className="space-y-3 px-6 py-4">
+                      <div>
+                        <span className="font-medium text-gray-700">Item : </span>
+                        <span className="text-gray-900">
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.label
+                          }
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Charge (SCR): </span>
+                        <span className="text-gray-900">
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.price
+                          }
+                          .00
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">
+                          {
+                            boosterOptions[formData.boosterCategory as keyof typeof boosterOptions]?.find(
+                              (opt) => opt.value === formData.boosterType,
+                            )?.validity
+                          }
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="flex items-start gap-3 rounded-xl bg-gray-50 p-6">
                     <Checkbox
                       id="confirm"
@@ -894,8 +932,10 @@ export default function MobileBoosterPage() {
                   <div className="rounded-xl p-6" style={{ backgroundColor: "rgba(0, 107, 182, 0.05)" }}>
                     <p className="mb-3 font-semibold text-gray-900">Note:</p>
                     <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700">
-                      <li>Please ensure that the details you have provided above are correct before proceeding.</li>
-                      <li className="text-red-600">
+                      <li className="italic">
+                        Please ensure that the details you have provided above are correct before proceeding.
+                      </li>
+                      <li className="italic text-gray-700">
                         *Not allowed - This item is not allowed through this Payment Gateway.
                       </li>
                     </ol>
