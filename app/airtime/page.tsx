@@ -406,7 +406,7 @@ export default function AirtimePage() {
                         >
                           2
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Service Selection</h2>
                       </div>
 
                       <div className="space-y-4">
@@ -502,7 +502,9 @@ export default function AirtimePage() {
                         >
                           3
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                          Security Verification
+                        </h2>
                       </div>
 
                       <div className="space-y-4">

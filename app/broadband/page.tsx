@@ -428,7 +428,7 @@ export default function BroadbandPage() {
                         >
                           2
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Service Selection</h2>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">Service Selection</h2>
                       </div>
                       {/* END: Improved section headers */}
 
@@ -498,7 +498,9 @@ export default function BroadbandPage() {
                         >
                           3
                         </div>
-                        <h2 className="text-2xl font-bold text-gray-900">Security Verification</h2>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                          Security Verification
+                        </h2>
                       </div>
                       {/* END: Improved section headers */}
 
