@@ -791,7 +791,6 @@ export default function BroadbandPage() {
                     <p className="mb-3 font-semibold text-gray-900">Note:</p>
                     <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700 italic">
                       <li>Please ensure that the details you have provided above are correct before proceeding.</li>
-                      <li>*Not allowed - This item is not allowed through this Payment Gateway.</li>
                     </ol>
                   </div>
                   {/* END ADDED NOTE SECTION */}

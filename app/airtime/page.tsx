@@ -779,7 +779,6 @@ export default function AirtimePage() {
                     <p className="mb-3 font-semibold text-gray-900">Note:</p>
                     <ol className="list-inside list-decimal space-y-2 text-sm text-gray-700 italic">
                       <li>Please ensure that the details you have provided above are correct before proceeding.</li>
-                      <li>*Not allowed - This item is not allowed through this Payment Gateway.</li>
                     </ol>
                   </div>
 
@@ -848,8 +847,8 @@ export default function AirtimePage() {
                           SCR {formData.amount}.00
                         </span>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 border-b border-gray-100 pb-2 sm:pb-3">
-                        <span className="font-medium text-gray-700 text-sm sm:text-base">Payment Method</span>
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                        <span className="font-medium text-gray-600 text-sm sm:text-base">Payment Method</span>
                         <span className="font-semibold text-gray-900 text-sm sm:text-base">Visa Card</span>
                       </div>
                       <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
